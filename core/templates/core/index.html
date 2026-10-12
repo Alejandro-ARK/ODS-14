@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- ¿Qué encontrarás aquí? -->
+<h2 class="mo-seccion-titulo">
+  <span class="mo-icono-redondo bg-mo-azul"><i class="fas fa-compass"></i></span>
+  ¿Qué encontrarás en Misión Océano?
+</h2>
+<div class="row mb-5">
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% url 'core:aprende' %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-azul"><i class="fas fa-book-open"></i></span>
+      <strong>Aprende</strong>
+      <small>El ODS 14 y los ecosistemas marinos</small>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% url 'core:juega' %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-verde"><i class="fas fa-gamepad"></i></span>
+      <strong>Juega</strong>
+      <small>Recolecta basura y pon a prueba tu memoria</small>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% url 'core:quiz' %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-sol"><i class="fas fa-brain"></i></span>
+      <strong>Demuestra lo que sabes</strong>
+      <small>Haz el quiz y gana puntos</small>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% url 'core:mares' %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-azul"><i class="fas fa-water"></i></span>
+      <strong>Nuestros mares</strong>
+      <small>El Caribe y el Pacífico colombianos</small>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% url 'core:actua' %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-coral"><i class="fas fa-leaf"></i></span>
+      <strong>Actúa</strong>
+      <small>Acciones concretas para cuidar el mar</small>
+    </a>
+  </div>
+  <div class="col-6 col-md-4 col-lg-2 mb-4">
+    <a href="{% if user.is_authenticated %}{% url 'usuarios:perfil' %}{% else %}{% url 'usuarios:registro' %}{% endif %}" class="mo-acceso">
+      <span class="mo-icono-redondo bg-mo-turquesa"><i class="fas fa-user-circle"></i></span>
+      <strong>Mi perfil</strong>
+      <small>Sigue tu progreso, puntos y nivel</small>
+    </a>
+  </div>
+</div>
+
+<!-- Datos rápidos -->
+<div class="row mb-5">
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-stat mo-stat-azul">
+      <i class="fas fa-globe-americas mo-stat-icono"></i>
+      <h3>70%</h3>
+      <p>de la Tierra está cubierta por océano</p>
+      <a href="{% url 'core:aprende' %}">Dato curioso →</a>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-stat mo-stat-turquesa">
+      <i class="fas fa-recycle mo-stat-icono"></i>
+      <h3>+8M</h3>
+      <p>toneladas de plástico llegan al mar cada año</p>
+      <a href="{% url 'core:actua' %}">¿Qué puedo hacer? →</a>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-stat mo-stat-sol">
+      <i class="fas fa-fish mo-stat-icono"></i>
+      <h3>ODS 14</h3>
+      <p>Vida Submarina, nuestro objetivo</p>
+      <a href="{% url 'core:aprende' %}">Ver metas →</a>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-stat mo-stat-coral">
+      <i class="fas fa-water mo-stat-icono"></i>
+      <h3>2</h3>
+      <p>mares bañan las costas de Colombia</p>
+      <a href="{% url 'core:mares' %}">Conócelos →</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Columna izquierda -->
+  <div class="col-lg-7 mb-4">
+    <div class="mo-card mb-4">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-azul" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-bullseye"></i></span>
+        ¿De qué trata el ODS 14?
+      </h3>
+      <p>
+        El <strong>Objetivo de Desarrollo Sostenible 14 (Vida Submarina)</strong>, de la Agenda 2030 de la ONU,
+        busca <em>conservar y utilizar en forma sostenible los océanos, los mares y los recursos marinos</em>.
+        Algunas de sus metas más importantes son:
+      </p>
+      <ul class="mo-lista-check">
+        <li>Reducir de forma significativa la contaminación marina, especialmente la de origen terrestre y los desechos plásticos.</li>
+        <li>Proteger y restaurar los ecosistemas marinos y costeros (manglares, arrecifes, praderas marinas).</li>
+        <li>Minimizar la acidificación de los océanos causada por el exceso de CO2.</li>
+        <li>Regular la explotación pesquera y poner fin a la pesca excesiva e ilegal.</li>
+        <li>Conservar al menos el 10% de las zonas costeras y marinas del planeta.</li>
+      </ul>
+      <a href="{% url 'core:aprende' %}" class="btn btn-mo-azul"><i class="fas fa-book-open mr-1"></i> Aprender más sobre el ODS 14</a>
+    </div>
+
+    <div class="mo-card">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-lightbulb"></i></span>
+        ¿Sabías que...?
+      </h3>
+      <ul class="mo-lista-check mb-0">
+        <li>Los arrecifes de coral cubren menos del 1% del fondo marino, pero albergan cerca del 25% de todas las especies marinas.</li>
+        <li>Colombia es uno de los pocos países con costas en dos océanos: el Pacífico y el Atlántico (mar Caribe).</li>
+        <li>Los manglares protegen las costas de la erosión y son el hogar de miles de especies jóvenes.</li>
+        <li>Cada pequeña acción, como reducir el uso de plástico, ayuda a proteger la vida submarina.</li>
+      </ul>
+    </div>
+  </div>
+  <!-- /Columna izquierda -->
+
+  <!-- Columna derecha -->
+  <div class="col-lg-5 mb-4">
+    <div class="mo-card mb-4">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-azul" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-fish"></i></span>
+        Ecosistemas marinos de Colombia
+      </h3>
+      <ul class="list-unstyled mb-0">
+        <li class="mb-2"><i class="fas fa-tree text-success mr-2"></i> Manglares</li>
+        <li class="mb-2"><i class="fas fa-water text-info mr-2"></i> Arrecifes de coral</li>
+        <li class="mb-2"><i class="fas fa-leaf text-primary mr-2"></i> Praderas de pastos marinos</li>
+        <li><i class="fas fa-mountain text-secondary mr-2"></i> Zonas costeras rocosas</li>
+      </ul>
+      <a href="{% url 'core:mares' %}" class="d-inline-block mt-3 btn btn-mo-outline btn-sm">Ver detalle de nuestros mares</a>
+    </div>
+
+    <!-- Tu progreso -->
+    <div class="mo-card">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-sol" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-trophy"></i></span>
+        Tu progreso
+      </h3>
+      {% if user.is_authenticated %}
+        <p class="mb-1">Nivel: <strong class="js-nivel-usuario">{{ user.nivel }}</strong></p>
+        <p>Puntos: <strong class="js-puntos-usuario">{{ user.puntos }}</strong></p>
+        <div class="mo-progreso mb-2">
+          <span style="width: {{ user.porcentaje_nivel }}%"></span>
+        </div>
+        <small class="text-muted">¡Completa quizzes y los juegos para subir de nivel!</small>
+      {% else %}
+        <p>Inicia sesión para ver tu nombre de perfil, puntos y nivel.</p>
+        <a href="{% url 'usuarios:login' %}" class="btn btn-mo-azul btn-sm">Iniciar sesión</a>
+        <a href="{% url 'usuarios:registro' %}" class="btn btn-mo-outline btn-sm">Registrarse</a>
+      {% endif %}
+    </div>
+  </div>
+  <!-- /Columna derecha -->
+</div>
+{% endblock %}

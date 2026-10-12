@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mo-card mb-4">
+  <p class="mb-0">
+    Colombia es uno de los pocos países de América con costas en dos océanos distintos: el
+    <strong>mar Caribe</strong> (parte del océano Atlántico) y el <strong>océano Pacífico</strong>. Esta doble
+    fachada marítima le da al país una enorme riqueza de ecosistemas y especies.
+  </p>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-azul" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-sun"></i></span>
+        Mar Caribe
+      </h3>
+      <ul class="mo-lista-check mb-0">
+        <li>Aguas cálidas y transparentes, ideales para arrecifes de coral.</li>
+        <li>Alberga parques naturales como Islas del Rosario, Tayrona y el archipiélago de San Andrés y Providencia.</li>
+        <li>Es hogar de tortugas marinas, manatíes y una gran diversidad de peces tropicales.</li>
+        <li>Enfrenta presión por el turismo masivo y el blanqueamiento de corales.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-cloud-rain"></i></span>
+        Océano Pacífico
+      </h3>
+      <ul class="mo-lista-check mb-0">
+        <li>Costas cubiertas de selva húmeda y extensos manglares.</li>
+        <li>Zona de avistamiento de ballenas jorobadas que llegan cada año a reproducirse.</li>
+        <li>Incluye el Parque Nacional Natural Gorgona, un santuario de biodiversidad marina.</li>
+        <li>Una de las regiones con mayor pluviosidad del mundo, lo que enriquece sus manglares.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="mo-card">
+  <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+    <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-shield-heart"></i></span>
+    Áreas marinas protegidas
+  </h3>
+  <p>
+    Colombia cuenta con varias áreas marinas protegidas que buscan cumplir la meta del ODS 14 de conservar
+    al menos el 10% de las zonas costeras y marinas. Algunas de las más importantes son:
+  </p>
+  <div class="row text-center">
+    <div class="col-6 col-md-3 mb-3">
+      <i class="fas fa-umbrella-beach fa-2x text-warning mb-2"></i>
+      <p class="mb-0"><strong>Islas del Rosario</strong><br><small class="text-muted">Mar Caribe</small></p>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <i class="fas fa-mountain-sun fa-2x text-success mb-2"></i>
+      <p class="mb-0"><strong>Tayrona</strong><br><small class="text-muted">Mar Caribe</small></p>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <i class="fas fa-fish fa-2x text-info mb-2"></i>
+      <p class="mb-0"><strong>Gorgona</strong><br><small class="text-muted">Océano Pacífico</small></p>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <i class="fas fa-water fa-2x text-primary mb-2"></i>
+      <p class="mb-0"><strong>San Andrés y Providencia</strong><br><small class="text-muted">Mar Caribe</small></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base_auth.html' %}
+
+{% block titulo %}Registrarse{% endblock %}
+{% block subtitulo %}Crea tu cuenta y empieza a sumar puntos{% endblock %}
+
+{% block formulario %}
+    <form method="post" action="{% url 'usuarios:registro' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.nombre.id_for_label }}">Nombre de perfil</label>
+        {{ form.nombre }}
+        <small class="form-text text-muted">Podrás cambiarlo cuando quieras desde tu perfil.</small>
+      </div>
+      <div class="form-group">
+        <label for="{{ form.correo.id_for_label }}">Correo electrónico</label>
+        {{ form.correo }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.contrasena.id_for_label }}">Contraseña</label>
+        {{ form.contrasena }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.contrasena2.id_for_label }}">Confirmar contraseña</label>
+        {{ form.contrasena2 }}
+      </div>
+      <button type="submit" class="btn btn-mo-azul btn-block mt-3">Registrarme</button>
+    </form>
+{% endblock %}
+
+{% block pie %}
+    <p class="mo-auth-pie mb-1">
+      ¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}">Inicia sesión</a>
+    </p>
+{% endblock %}

@@ -1,0 +1,11 @@
+Django>=5.2,<6.2
+bcrypt>=4.0                  # lee los hashes de contraseña generados por PHP (password_hash)
+
+# --- Despliegue (Render) ---
+gunicorn>=22.0               # servidor de producción
+whitenoise>=6.6              # sirve CSS/JS/fuentes sin necesitar Nginx
+dj-database-url>=2.1         # lee DATABASE_URL
+psycopg[binary]>=3.1         # driver de PostgreSQL
+
+# Solo si usas MySQL/MariaDB (DB_ENGINE=mysql en .env):
+# mysqlclient>=2.2

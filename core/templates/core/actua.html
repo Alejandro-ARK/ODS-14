@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mo-card mb-4">
+  <p class="mb-0">
+    Cuidar el océano no depende solo de gobiernos y empresas: nuestras decisiones diarias también cuentan.
+    Marca las acciones que ya practicas o que te comprometes a hacer. Tu progreso se guarda en este
+    navegador.
+  </p>
+</div>
+
+<div class="mo-card mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mo-seccion-titulo mb-0" style="font-size:1.1rem;">
+      <span class="mo-icono-redondo bg-mo-coral" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-list-check"></i></span>
+      Mi compromiso con el océano
+    </h3>
+    <span id="checklist-contador" class="mo-chip-puntos"></span>
+  </div>
+
+  <ul id="checklist-actua" class="list-unstyled mb-0">
+
+    <li class="checklist-item custom-control custom-checkbox mb-3">
+      <input type="checkbox" class="custom-control-input" id="accion1">
+      <label class="custom-control-label" for="accion1">Reduzco el uso de plásticos de un solo uso (bolsas, pitillos, botellas).</label>
+    </li>
+
+    <li class="checklist-item custom-control custom-checkbox mb-3">
+      <input type="checkbox" class="custom-control-input" id="accion2">
+      <label class="custom-control-label" for="accion2">Separo y reciclo correctamente mis residuos.</label>
+    </li>
+
+    <li class="checklist-item custom-control custom-checkbox mb-3">
+      <input type="checkbox" class="custom-control-input" id="accion3">
+      <label class="custom-control-label" for="accion3">Participo o me gustaría participar en jornadas de limpieza de playas o ríos.</label>
+    </li>
+
+    <li class="checklist-item custom-control custom-checkbox mb-3">
+      <input type="checkbox" class="custom-control-input" id="accion4">
+      <label class="custom-control-label" for="accion4">Consumo productos del mar que provienen de pesca responsable.</label>
+    </li>
+
+    <li class="checklist-item custom-control custom-checkbox mb-3">
+      <input type="checkbox" class="custom-control-input" id="accion5">
+      <label class="custom-control-label" for="accion5">Ahorro agua en mi hogar, evitando el desperdicio que termina en ríos y mares.</label>
+    </li>
+
+    <li class="checklist-item custom-control custom-checkbox mb-0">
+      <input type="checkbox" class="custom-control-input" id="accion6">
+      <label class="custom-control-label" for="accion6">Comparto lo que aprendo sobre el ODS 14 con mi familia y amigos.</label>
+    </li>
+
+  </ul>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-users"></i></span>
+        Organízate
+      </h3>
+      <p>Algunas iniciativas donde puedes involucrarte:</p>
+      <ul class="mb-0">
+        <li>Jornadas de limpieza de playas organizadas por tu comunidad o colegio.</li>
+        <li>Grupos ambientales locales enfocados en la conservación marina.</li>
+        <li>Campañas escolares o universitarias sobre el ODS 14.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-azul" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-share-nodes"></i></span>
+        Comparte Misión Océano
+      </h3>
+      <p>Invita a más personas a aprender sobre el ODS 14:</p>
+      <a class="btn btn-mo-outline btn-block mb-2" href="https://api.whatsapp.com/send?text=Descubre%20Misi%C3%B3n%20Oc%C3%A9ano%2C%20un%20proyecto%20educativo%20sobre%20el%20ODS%2014%3A%20Vida%20Submarina" target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp mr-1"></i> Compartir por WhatsApp
+      </a>
+      <a class="btn btn-mo-outline btn-block mb-0" href="mailto:?subject=Misi%C3%B3n%20Oc%C3%A9ano&body=Te%20comparto%20este%20proyecto%20educativo%20sobre%20el%20ODS%2014%3A%20Vida%20Submarina">
+        <i class="fas fa-envelope mr-1"></i> Compartir por correo
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

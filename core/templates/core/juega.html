@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mo-card mb-4 p-0 overflow-hidden">
+  <ul class="nav nav-pills p-3 pb-0" id="juegos-tab" role="tablist">
+    <li class="nav-item mr-2 mb-2">
+      <a class="nav-link active" id="tab-recolector-link" data-toggle="tab" href="#tab-recolector" role="tab">
+        <i class="fas fa-trash-alt mr-1"></i> Recolecta la basura
+      </a>
+    </li>
+    <li class="nav-item mb-2">
+      <a class="nav-link" id="tab-memoria-link" data-toggle="tab" href="#tab-memoria" role="tab">
+        <i class="fas fa-th-large mr-1"></i> Memoria marina
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content p-4" id="juegos-tab-content">
+
+    <!-- =============== Juego 1: Recolecta la basura =============== -->
+    <div class="tab-pane fade show active" id="tab-recolector" role="tabpanel">
+      <p class="text-center lead">
+        Mueve la red para atrapar la basura antes de que llegue al fondo marino. ¡Evita atrapar a los
+        animales marinos!
+      </p>
+
+      <div class="recolector-wrap">
+        <div class="recolector-marcador">
+          <span><i class="fas fa-star text-warning mr-1"></i> Puntos: <strong id="recolector-puntos">0</strong></span>
+          <span><i class="fas fa-heart text-danger mr-1"></i> Vidas: <strong id="recolector-vidas">3</strong></span>
+          <span><i class="fas fa-clock mr-1"></i> Tiempo: <strong id="recolector-tiempo">45</strong>s</span>
+        </div>
+
+        <div style="position:relative;">
+          <canvas id="recolector-canvas" width="640" height="420"></canvas>
+          <div id="recolector-overlay" class="text-center">
+            <button id="recolector-iniciar" class="btn btn-lg btn-mo-azul">
+              <i class="fas fa-play mr-1"></i> Comenzar
+            </button>
+          </div>
+        </div>
+
+        <p class="text-center text-muted small mt-2 mb-0">
+          Muévete con el mouse o con el dedo (pantallas táctiles) sobre el recuadro del juego.
+        </p>
+
+        {% if not user.is_authenticated %}
+          <p class="text-muted text-center mt-2">
+            <i class="fas fa-info-circle mr-1"></i>
+            <a href="{% url 'usuarios:login' %}">Inicia sesión</a> para guardar los puntos que ganes en este juego.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- =============== Juego 2: Memoria marina =============== -->
+    <div class="tab-pane fade" id="tab-memoria" role="tabpanel">
+      <div class="text-center">
+        <p id="memoria-mensaje" class="lead">Encuentra las parejas de criaturas marinas.</p>
+
+        <div id="memoria-tablero" class="memoria-tablero mb-3"></div>
+
+        <button id="memoria-reiniciar" class="btn btn-mo-outline">
+          <i class="fas fa-rotate-right mr-1"></i> Reiniciar juego
+        </button>
+
+        {% if not user.is_authenticated %}
+          <p class="text-muted mt-3">
+            <i class="fas fa-info-circle mr-1"></i>
+            <a href="{% url 'usuarios:login' %}">Inicia sesión</a> para guardar los puntos que ganes en este juego.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="mo-card">
+  <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+    <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-circle-info"></i></span>
+    ¿Cómo se juega?
+  </h3>
+  <div class="row">
+    <div class="col-md-6">
+      <h6><i class="fas fa-trash-alt mr-1 text-danger"></i> Recolecta la basura</h6>
+      <ol>
+        <li>Pulsa "Comenzar" y mueve la red con el mouse o el dedo.</li>
+        <li>Atrapa botellas, bolsas y demás basura 🗑️ antes de que lleguen al fondo.</li>
+        <li>Evita atrapar peces, tortugas y demás vida marina 🐠🐢: ¡pierdes puntos si lo haces!</li>
+        <li>Tienes 3 vidas y 45 segundos. ¡Consigue el mayor puntaje posible!</li>
+      </ol>
+    </div>
+    <div class="col-md-6">
+      <h6><i class="fas fa-th-large mr-1 text-primary"></i> Memoria marina</h6>
+      <ol>
+        <li>Haz clic sobre dos cartas para voltearlas.</li>
+        <li>Si ambas muestran la misma criatura marina, ¡encontraste una pareja!</li>
+        <li>Encuentra las 8 parejas con el menor número de intentos posible.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock %}

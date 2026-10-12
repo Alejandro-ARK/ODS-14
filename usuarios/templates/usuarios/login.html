@@ -1,0 +1,26 @@
+{% extends 'base_auth.html' %}
+
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block subtitulo %}Inicia sesión para seguir tu progreso{% endblock %}
+
+{% block formulario %}
+    {# Sin "action": envía a la URL actual, conservando ?next=... si lo hay #}
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.correo.id_for_label }}">Correo electrónico</label>
+        {{ form.correo }}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.contrasena.id_for_label }}">Contraseña</label>
+        {{ form.contrasena }}
+      </div>
+      <button type="submit" class="btn btn-mo-azul btn-block mt-3">Entrar</button>
+    </form>
+{% endblock %}
+
+{% block pie %}
+    <p class="mo-auth-pie mb-1">
+      ¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}">Regístrate aquí</a>
+    </p>
+{% endblock %}

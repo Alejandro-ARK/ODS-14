@@ -1,0 +1,32 @@
+# Blueprint de Render: crea la base PostgreSQL y el servicio web de una sola vez.
+databases:
+  - name: mision-oceano-db
+    plan: free
+    databaseName: mision_oceano
+    user: mision_oceano
+
+services:
+  - type: web
+    name: mision-oceano
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mision-oceano-db
+          property: connectionString
+      # Administrador inicial (la contraseña la escribes tú en el panel de Render)
+      - key: DJANGO_SUPERUSER_CORREO
+        sync: false
+      - key: DJANGO_SUPERUSER_NOMBRE
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false

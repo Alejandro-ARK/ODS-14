@@ -1,0 +1,169 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if user.is_authenticated %}<meta name="csrf-token" content="{{ csrf_token }}">{% endif %}
+  <title>{{ page_titulo|default:"Misión Océano" }} | Misión Océano</title>
+
+  <!-- Tipografía -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Mulish:wght@400;600;700&display=swap">
+  <!-- Bootstrap (solo utilidades de maquetado: grid, formularios, modales) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <!-- Font Awesome (iconos) -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Identidad visual propia de Misión Océano -->
+  <link rel="stylesheet" href="{% static 'css/mision-oceano.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body{% if user.is_authenticated %} data-url-guardar-puntos="{% url 'usuarios:guardar_puntos' %}"{% endif %}>
+{% with url_actual=request.resolver_match.url_name %}
+
+<!-- ======================= NAVBAR ======================= -->
+<header class="mo-navbar">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'core:inicio' %}">
+        <span class="mo-logo-icono">🌊</span> Misión <span class="mo-logo-acento">Océano</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mo-menu" aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mo-menu">
+        <ul class="navbar-nav mo-nav-links mx-lg-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'inicio' %}activa{% endif %}" href="{% url 'core:inicio' %}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'aprende' %}activa{% endif %}" href="{% url 'core:aprende' %}">Aprende</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'juega' %}activa{% endif %}" href="{% url 'core:juega' %}">Juega</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'quiz' %}activa{% endif %}" href="{% url 'core:quiz' %}">Quiz</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'mares' %}activa{% endif %}" href="{% url 'core:mares' %}">Nuestros mares</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'actua' %}activa{% endif %}" href="{% url 'core:actua' %}">Actúa</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav align-items-lg-center">
+          {% if user.is_authenticated %}
+            <li class="nav-item mr-lg-2">
+              <span class="mo-chip-puntos">
+                <i class="fas fa-star"></i>
+                <span class="js-puntos-usuario">{{ user.puntos }}</span> pts ·
+                Nivel <span class="js-nivel-usuario">{{ user.nivel }}</span>
+              </span>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle mo-avatar-link {% if url_actual == 'perfil' %}activa{% endif %}" href="#" id="mo-user-menu" data-toggle="dropdown">
+                <span class="mo-avatar">{{ user.inicial }}</span>
+                <span class="d-lg-none ml-2">{{ user.nombre }}</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="mo-user-menu">
+                <span class="dropdown-item-text text-muted small">Sesión iniciada como<br><strong>{{ user.nombre }}</strong></span>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'usuarios:perfil' %}"><i class="fas fa-user-circle mr-2"></i>Mi perfil</a>
+                <form method="post" action="{% url 'usuarios:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión</button>
+                </form>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link {% if url_actual == 'login' %}activa{% endif %}" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn mo-btn-pill mo-btn-claro ml-lg-2" href="{% url 'usuarios:registro' %}">Registrarme</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endwith %}
+
+<!-- ======================= HERO DE LA PÁGINA ======================= -->
+<section class="mo-hero {% if hero_grande %}mo-hero-grande{% else %}mo-hero-chico{% endif %}">
+  <div class="mo-hero-olas-fondo"></div>
+  <div class="container position-relative">
+    {% if not hero_grande %}
+      <div class="mo-hero-icono"><i class="fas {{ hero_icono|default:'fa-water' }}"></i></div>
+    {% endif %}
+    <h1>{{ page_titulo }}</h1>
+    {% if hero_subtitulo %}
+      <p class="mo-hero-subtitulo">{{ hero_subtitulo }}</p>
+    {% endif %}
+  </div>
+  <div class="mo-ola-divisoria">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0 30 Q150 60 300 30 T600 30 T900 30 T1200 30 V60 H0 Z"></path></svg>
+  </div>
+</section>
+
+<!-- ======================= CONTENIDO ======================= -->
+<main class="mo-main">
+  <div class="container mo-main-container">
+
+{% block content %}{% endblock %}
+
+  </div>
+  <!-- /.mo-main-container -->
+</main>
+<!-- /.mo-main -->
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="mo-footer">
+  <div class="mo-ola-divisoria mo-ola-footer">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0 30 Q150 0 300 30 T600 30 T900 30 T1200 30 V60 H0 Z"></path></svg>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5 mb-4 mb-md-0">
+        <h5 class="mo-footer-brand"><span class="mo-logo-icono">🌊</span> Misión Océano</h5>
+        <p class="mo-footer-texto">
+          Proyecto educativo sobre el ODS 14: Vida Submarina. Aprende, juega y actúa en favor
+          de la conservación de los océanos, los mares y los recursos marinos.
+        </p>
+      </div>
+      <div class="col-6 col-md-3 mb-4 mb-md-0">
+        <h6>Explora</h6>
+        <ul class="list-unstyled mo-footer-links">
+          <li><a href="{% url 'core:aprende' %}">Aprende</a></li>
+          <li><a href="{% url 'core:juega' %}">Juega</a></li>
+          <li><a href="{% url 'core:quiz' %}">Quiz</a></li>
+          <li><a href="{% url 'core:mares' %}">Nuestros mares</a></li>
+          <li><a href="{% url 'core:actua' %}">Actúa</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-4">
+        <h6>Cuenta</h6>
+        <ul class="list-unstyled mo-footer-links">
+          <li><a href="{% url 'usuarios:login' %}">Iniciar sesión</a></li>
+          <li><a href="{% url 'usuarios:registro' %}">Registrarme</a></li>
+          <li><a href="{% url 'usuarios:perfil' %}">Mi perfil</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="mo-footer-separador">
+    <p class="mo-footer-copy mb-0">
+      🌊 Misión Océano &mdash; Hecho con 💙 por quienes cuidan el océano.
+    </p>
+  </div>
+</footer>
+
+<!-- jQuery + Bootstrap (navbar, dropdown, colapsable) -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- Lógica propia de Misión Océano (progreso, quizzes, juegos) -->
+<script src="{% static 'js/mision-oceano.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

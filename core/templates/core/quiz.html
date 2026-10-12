@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mo-card">
+  <div class="mo-progreso mb-2">
+    <span id="quiz-progreso" style="width:0%"></span>
+  </div>
+  <p id="quiz-contador" class="text-muted small mb-3">Pregunta 1 de 5</p>
+
+  <div id="quiz-contenedor">
+
+    <div class="quiz-pregunta activa">
+      <h5>1. ¿Qué busca principalmente el ODS 14?</h5>
+      <button class="quiz-opcion" data-correcta="0">Aumentar la pesca industrial sin límites</button>
+      <button class="quiz-opcion" data-correcta="1">Conservar y usar de forma sostenible los océanos y sus recursos</button>
+      <button class="quiz-opcion" data-correcta="0">Construir más puertos en zonas de manglar</button>
+    </div>
+
+    <div class="quiz-pregunta">
+      <h5>2. ¿Qué porcentaje de especies marinas albergan los arrecifes de coral, a pesar de cubrir menos del 1% del fondo marino?</h5>
+      <button class="quiz-opcion" data-correcta="0">5%</button>
+      <button class="quiz-opcion" data-correcta="1">Cerca del 25%</button>
+      <button class="quiz-opcion" data-correcta="0">90%</button>
+    </div>
+
+    <div class="quiz-pregunta">
+      <h5>3. ¿Con cuántos océanos tiene costa Colombia?</h5>
+      <button class="quiz-opcion" data-correcta="0">Uno</button>
+      <button class="quiz-opcion" data-correcta="1">Dos (Pacífico y mar Caribe)</button>
+      <button class="quiz-opcion" data-correcta="0">Tres</button>
+    </div>
+
+    <div class="quiz-pregunta">
+      <h5>4. ¿Cuál de estas acciones ayuda a proteger la vida submarina?</h5>
+      <button class="quiz-opcion" data-correcta="0">Botar basura en la playa</button>
+      <button class="quiz-opcion" data-correcta="0">Pescar especies en veda</button>
+      <button class="quiz-opcion" data-correcta="1">Reducir el uso de plásticos de un solo uso</button>
+    </div>
+
+    <div class="quiz-pregunta">
+      <h5>5. ¿Qué función cumplen los manglares?</h5>
+      <button class="quiz-opcion" data-correcta="1">Proteger la costa de la erosión y ser guardería de especies jóvenes</button>
+      <button class="quiz-opcion" data-correcta="0">No cumplen ninguna función ecológica</button>
+      <button class="quiz-opcion" data-correcta="0">Solo sirven como madera de construcción</button>
+    </div>
+
+  </div>
+
+  <div id="quiz-resultado" class="alert alert-info mt-3">
+    <div id="quiz-resumen"></div>
+    {% if user.is_authenticated %}
+      <button id="quiz-guardar-puntos" class="btn btn-mo-azul mt-2" style="display:none;" data-puntos="0">
+        <i class="fas fa-save mr-1"></i> Guardar mis puntos
+      </button>
+    {% else %}
+      <p class="text-muted mt-2 mb-0">
+        <i class="fas fa-info-circle mr-1"></i>
+        <a href="{% url 'usuarios:login' %}">Inicia sesión</a> o <a href="{% url 'usuarios:registro' %}">regístrate</a> para guardar tus puntos.
+      </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

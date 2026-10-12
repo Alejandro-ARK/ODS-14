@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="mo-card text-center">
+      <span class="mo-avatar mx-auto mb-3" style="width:72px;height:72px;font-size:1.8rem;">
+        {{ user.inicial }}
+      </span>
+      <h3 class="mb-0" style="font-size:1.3rem;">{{ user.nombre }}</h3>
+      <p class="text-muted small">
+        Miembro desde
+        {{ user.fecha_registro|date:"d/m/Y"|default:"—" }}
+      </p>
+
+      <div class="row text-center my-3">
+        <div class="col-6">
+          <h4 class="mb-0 js-nivel-usuario">{{ user.nivel }}</h4>
+          <small class="text-muted">Nivel</small>
+        </div>
+        <div class="col-6">
+          <h4 class="mb-0 js-puntos-usuario">{{ user.puntos }}</h4>
+          <small class="text-muted">Puntos</small>
+        </div>
+      </div>
+
+      <form method="post" action="{% url 'usuarios:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-mo-outline btn-block">
+          <i class="fas fa-sign-out-alt mr-1"></i> Cerrar sesión
+        </button>
+      </form>
+    </div>
+
+    <!-- Editar nombre de perfil -->
+    <div class="mo-card mt-4">
+      <h3 class="mo-seccion-titulo" style="font-size:1rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:34px;height:34px;font-size:.9rem;"><i class="fas fa-pen"></i></span>
+        Cambiar nombre de perfil
+      </h3>
+
+      {% for mensaje in messages %}
+        <div class="alert alert-success py-2">{{ mensaje }}</div>
+      {% endfor %}
+      {% for error in form.nombre.errors %}
+        <div class="alert alert-danger py-2">{{ error }}</div>
+      {% endfor %}
+
+      <form method="post" action="{% url 'usuarios:perfil' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.nombre.id_for_label }}">Nombre de perfil</label>
+          {{ form.nombre }}
+        </div>
+        <button type="submit" class="btn btn-mo-azul btn-block mb-0">
+          <i class="fas fa-save mr-1"></i> Guardar cambios
+        </button>
+      </form>
+      <p class="text-muted small mt-2 mb-0">
+        Tu correo ({{ user.correo }}) se usa solo para iniciar sesión;
+        tu nombre de perfil es el que ven los demás y puedes cambiarlo cuando quieras.
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-8 mb-4">
+    <div class="mo-card mb-4">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-sol" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-award"></i></span>
+        Mis insignias
+      </h3>
+      {% for ins in user.insignias %}
+        <span class="insignia {% if ins.desbloqueada %}desbloqueada{% else %}bloqueada{% endif %}">
+          <i class="fas {{ ins.icono }} mr-1"></i>
+          {{ ins.nombre }}
+          <small class="d-block">{{ ins.umbral }}+ pts</small>
+        </span>
+      {% endfor %}
+    </div>
+
+    <div class="mo-card">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-chart-line"></i></span>
+        Sigue avanzando
+      </h3>
+      <p>Gana más puntos completando estas actividades:</p>
+      <div class="row text-center">
+        <div class="col-6 col-md-4 mb-2">
+          <a href="{% url 'core:quiz' %}" class="mo-acceso">
+            <span class="mo-icono-redondo bg-mo-sol" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-brain"></i></span>
+            <strong>Hacer el quiz</strong>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 mb-2">
+          <a href="{% url 'core:juega' %}" class="mo-acceso">
+            <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-gamepad"></i></span>
+            <strong>Jugar</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

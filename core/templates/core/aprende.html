@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mo-card mb-4">
+  <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+    <span class="mo-icono-redondo bg-mo-azul" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-bullseye"></i></span>
+    El ODS 14: Vida Submarina
+  </h3>
+  <p class="mb-0">
+    El <strong>Objetivo de Desarrollo Sostenible 14</strong> forma parte de la <em>Agenda 2030</em> de las
+    Naciones Unidas y busca <strong>conservar y utilizar en forma sostenible los océanos, los mares y los
+    recursos marinos</strong> para el desarrollo sostenible. Los océanos regulan el clima del planeta, producen
+    la mayor parte del oxígeno que respiramos y son el sustento de millones de personas que dependen de la
+    pesca y el turismo costero.
+  </p>
+</div>
+
+<h3 class="mo-seccion-titulo">
+  <span class="mo-icono-redondo bg-mo-turquesa"><i class="fas fa-list-check"></i></span>
+  Metas principales del ODS 14
+</h3>
+<div class="mo-acordeon mb-4" id="accordion-metas">
+
+  <div class="card m-0">
+    <div class="card-header bg-white" id="meta1-header">
+      <button class="btn btn-link" data-toggle="collapse" data-target="#meta1" aria-expanded="true">
+        <i class="fas fa-tint text-danger mr-2"></i> Reducir la contaminación marina
+      </button>
+    </div>
+    <div id="meta1" class="collapse show" data-parent="#accordion-metas">
+      <div class="card-body pt-0">
+        Disminuir de manera significativa la contaminación marina de todo tipo, en particular la producida
+        por actividades realizadas en tierra firme, como los desechos plásticos y el exceso de nutrientes
+        provenientes de la agricultura.
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-0">
+    <div class="card-header bg-white" id="meta2-header">
+      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#meta2">
+        <i class="fas fa-seedling text-success mr-2"></i> Proteger los ecosistemas marinos y costeros
+      </button>
+    </div>
+    <div id="meta2" class="collapse" data-parent="#accordion-metas">
+      <div class="card-body pt-0">
+        Gestionar y proteger de manera sostenible los ecosistemas marinos y costeros (manglares, arrecifes
+        de coral, praderas de pastos marinos) para evitar efectos adversos y fortalecer su resiliencia.
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-0">
+    <div class="card-header bg-white" id="meta3-header">
+      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#meta3">
+        <i class="fas fa-vial text-info mr-2"></i> Minimizar la acidificación de los océanos
+      </button>
+    </div>
+    <div id="meta3" class="collapse" data-parent="#accordion-metas">
+      <div class="card-body pt-0">
+        Reducir al mínimo los efectos de la acidificación de los océanos, provocada por el exceso de CO2
+        en la atmósfera, mediante una mayor cooperación científica en todos los niveles.
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-0">
+    <div class="card-header bg-white" id="meta4-header">
+      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#meta4">
+        <i class="fas fa-fish text-warning mr-2"></i> Regular la pesca y acabar con la sobreexplotación
+      </button>
+    </div>
+    <div id="meta4" class="collapse" data-parent="#accordion-metas">
+      <div class="card-body pt-0">
+        Reglamentar eficazmente la explotación pesquera y poner fin a la pesca excesiva, la pesca ilegal y
+        las prácticas de pesca destructivas, restableciendo las poblaciones de peces en el menor tiempo
+        posible.
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-0">
+    <div class="card-header bg-white" id="meta5-header">
+      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#meta5">
+        <i class="fas fa-shield-alt text-primary mr-2"></i> Conservar zonas costeras y marinas
+      </button>
+    </div>
+    <div id="meta5" class="collapse" data-parent="#accordion-metas">
+      <div class="card-body pt-0">
+        Conservar al menos el 10% de las zonas costeras y marinas del planeta, de conformidad con las
+        leyes nacionales e internacionales, y sobre la base de la mejor información científica disponible.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-tree"></i></span>
+        Ecosistemas marinos clave
+      </h3>
+      <dl class="mb-0">
+        <dt><i class="fas fa-tree text-success mr-1"></i> Manglares</dt>
+        <dd>Bosques costeros que protegen la línea de costa de la erosión y sirven de guardería para peces y crustáceos jóvenes.</dd>
+        <dt><i class="fas fa-water text-info mr-1"></i> Arrecifes de coral</dt>
+        <dd>Estructuras formadas por corales que, pese a cubrir menos del 1% del fondo marino, albergan cerca del 25% de las especies marinas.</dd>
+        <dt><i class="fas fa-leaf text-primary mr-1"></i> Praderas de pastos marinos</dt>
+        <dd>Extensas praderas submarinas que capturan grandes cantidades de carbono y sirven de alimento a especies como las tortugas marinas.</dd>
+        <dt class="mb-0"><i class="fas fa-mountain text-secondary mr-1"></i> Zonas costeras rocosas</dt>
+        <dd class="mb-0">Hábitats de mareas donde conviven moluscos, crustáceos y algas adaptados a los cambios constantes del nivel del agua.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-coral" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-triangle-exclamation"></i></span>
+        Principales amenazas
+      </h3>
+      <ul class="mo-lista-check">
+        <li>Contaminación por plásticos y microplásticos.</li>
+        <li>Sobrepesca y pesca ilegal.</li>
+        <li>Acidificación y calentamiento del océano.</li>
+        <li>Destrucción de manglares y arrecifes por la urbanización costera.</li>
+        <li>Vertimiento de aguas residuales sin tratar.</li>
+      </ul>
+      <a href="{% url 'core:actua' %}" class="btn btn-mo-coral btn-sm"><i class="fas fa-leaf mr-1"></i> ¿Qué puedo hacer yo?</a>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <a href="{% url 'core:quiz' %}" class="btn btn-mo-sol btn-lg"><i class="fas fa-brain mr-1"></i> Ya aprendí, ¡quiero hacer el quiz!</a>
+</div>
+{% endblock %}
