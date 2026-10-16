@@ -1,0 +1,27 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="mo-card">
+  <p><a href="{% url 'panel:base_datos' %}"><i class="fas fa-arrow-left mr-1"></i> Todas las tablas</a>
+     · <code>{{ tabla }}</code> · {{ pagina.paginator.count }} fila{{ pagina.paginator.count|pluralize }}</p>
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-hover mb-0 small">
+      <thead>
+        <tr>{% for c in columnas %}<th class="text-nowrap">{{ c }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+      {% for fila in filas %}
+        <tr>
+          {% for v in fila %}
+            <td>{% if v is None %}<span class="text-muted">NULL</span>{% elif v is True %}<i class="fas fa-check text-success"></i>{% elif v is False %}<i class="fas fa-times text-danger"></i>{% else %}{{ v|stringformat:"s"|truncatechars:60 }}{% endif %}</td>
+          {% endfor %}
+        </tr>
+      {% empty %}
+        <tr><td colspan="{{ columnas|length }}" class="text-center text-muted py-4">La tabla está vacía.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include 'panel/paginacion.html' with pagina=pagina %}
+</div>
+{% endblock %}

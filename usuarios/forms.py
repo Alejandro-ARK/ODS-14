@@ -34,6 +34,11 @@ class LoginForm(forms.Form):
         if correo and clave:
             self.usuario = authenticate(self.request, username=correo.lower(), password=clave)
             if self.usuario is None:
+                # Cuenta suspendida: se avisa solo si la contraseña es correcta, para no
+                # revelar a un tercero qué correos existen.
+                candidato = Usuario.objects.filter(correo__iexact=correo.strip()).first()
+                if candidato and not candidato.is_active and candidato.check_password(clave):
+                    raise ValidationError('Tu cuenta está suspendida. Contacta con el administrador.')
                 raise ValidationError('Correo o contraseña incorrectos.')
         return datos
 

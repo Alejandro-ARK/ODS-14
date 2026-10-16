@@ -1,0 +1,68 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="row">
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-card text-center h-100">
+      <span class="mo-icono-redondo bg-mo-azul mx-auto mb-2"><i class="fas fa-users"></i></span>
+      <h3 class="mb-0">{{ total }}</h3><small class="text-muted">Cuentas en total</small>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-card text-center h-100">
+      <span class="mo-icono-redondo bg-mo-verde mx-auto mb-2"><i class="fas fa-user-check"></i></span>
+      <h3 class="mb-0">{{ activos }}</h3><small class="text-muted">Activas</small>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-card text-center h-100">
+      <span class="mo-icono-redondo bg-mo-coral mx-auto mb-2"><i class="fas fa-user-lock"></i></span>
+      <h3 class="mb-0">{{ suspendidos }}</h3><small class="text-muted">Suspendidas</small>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3 mb-4">
+    <div class="mo-card text-center h-100">
+      <span class="mo-icono-redondo bg-mo-sol mx-auto mb-2"><i class="fas fa-user-shield"></i></span>
+      <h3 class="mb-0">{{ superusuarios }}</h3><small class="text-muted">Superusuarios</small>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-7 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-user-clock"></i></span>
+        Últimos registros
+      </h3>
+      <div class="table-responsive">
+        <table class="table table-sm table-hover mb-0">
+          <tbody>
+          {% for u in recientes %}
+            <tr>
+              <td><strong>{{ u.nombre }}</strong><br><small class="text-muted">{{ u.correo }}</small></td>
+              <td class="text-right text-muted small">{{ u.fecha_registro|date:"d/m/Y H:i" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td class="text-muted">Aún no hay cuentas.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5 mb-4">
+    <div class="mo-card h-100">
+      <h3 class="mo-seccion-titulo" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-sol" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-star"></i></span>
+        Actividad
+      </h3>
+      <p class="mb-1"><strong>{{ nuevos_7_dias }}</strong> cuentas nuevas en los últimos 7 días</p>
+      <p class="mb-1"><strong>{{ puntos_totales }}</strong> puntos acumulados entre todos los usuarios</p>
+      <p class="text-muted small mb-3">Motor de base de datos: {{ motor }}</p>
+      <a href="{% url 'panel:usuario_crear' %}" class="btn btn-mo-azul btn-block"><i class="fas fa-user-plus mr-1"></i> Crear cuenta</a>
+      <a href="{% url 'panel:base_datos' %}" class="btn btn-mo-outline btn-block"><i class="fas fa-database mr-1"></i> Ver base de datos</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

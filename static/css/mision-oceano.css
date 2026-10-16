@@ -211,10 +211,14 @@ a:hover { color: var(--mo-profundo); }
   border-radius: var(--mo-radio);
   box-shadow: var(--mo-sombra);
   padding: 1.5rem;
-  height: 100%;
   border: 1px solid rgba(2,48,71,.05);
 }
 .mo-card + .mo-card { margin-top: 0; }
+/* Igualar alturas SOLO cuando la tarjeta es la única de su columna (filas de
+   tarjetas parejas). Con "height: 100%" en todas las .mo-card, las columnas que
+   apilan dos tarjetas (perfil, inicio) estiraban cada una a la altura de la
+   columna completa, desbordaban <main> y el footer quedaba encima de ellas. */
+.row > * > .mo-card:only-child { height: 100%; }
 .mo-card-sm { padding: 1.1rem 1.25rem; }
 
 /* Tarjeta de acceso rápido (enlace completo) */
@@ -565,4 +569,69 @@ a:hover { color: var(--mo-profundo); }
 @media (max-width: 991.98px) {
   .mo-nav-links .nav-link { margin: .15rem 0; }
   .mo-chip-puntos { margin: .5rem 0; }
+}
+
+/* ===========================================================
+   Avatar (PNG apilados) y tienda
+   Los PNG son pixel art de 160×160 (cada "píxel" mide 5 px), por eso
+   se dibujan con image-rendering: pixelated para que no se vean borrosos.
+   =========================================================== */
+.mo-avatar-pixel {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  overflow: hidden;
+  width: var(--tam, 40px);
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  vertical-align: middle;
+  background: linear-gradient(135deg, #d6f1f4, #eaf7ee);
+}
+.mo-avatar-pixel img {
+  position: absolute;
+  max-width: none;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  user-select: none;
+  pointer-events: none;
+}
+/* Cuerpo entero: se muestra el lienzo completo de 160×160 */
+.mo-avatar-completo { border-radius: 1.1rem; }
+.mo-avatar-completo img { left: 0; top: 0; width: 100%; height: 100%; }
+/* Cabeza y hombros, recortado en círculo (barra de navegación) */
+.mo-avatar-busto { border-radius: 50%; box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(2, 48, 71, .18); }
+/* Región de 120×120 del lienzo (x 20–140, y 5–125): con 48 px cada píxel del arte mide exactamente 2 px */
+.mo-avatar-busto img { left: -16.6667%; top: -4.1667%; width: 133.3333%; height: 133.3333%; }
+
+/* ---- Tienda ---- */
+.mo-tienda-lateral { position: sticky; top: 5.5rem; }
+.mo-saldo { font-size: 1.15rem; color: #8a5a00; }
+.mo-saldo i { color: var(--mo-sol); }
+.mo-saldo strong { font-size: 1.5rem; }
+
+.mo-tienda-tabs .nav-link { color: var(--mo-profundo); font-weight: 700; border-radius: 2rem; margin-right: .35rem; margin-bottom: .35rem; }
+.mo-tienda-tabs .nav-link.active { background: var(--mo-azul); color: #fff; }
+.mo-tienda-tabs .nav-link.active .badge { background: rgba(255, 255, 255, .85); }
+
+.mo-parte {
+  height: 100%;
+  background: #fff;
+  border-radius: var(--mo-radio);
+  box-shadow: var(--mo-sombra);
+  border: 2px solid transparent;
+  padding: .75rem .75rem 1rem;
+  text-align: center;
+}
+.mo-parte-puesta { border-color: var(--mo-turquesa); }
+.mo-parte .mo-avatar-pixel { display: block; margin-left: auto; margin-right: auto; }
+.mo-parte-nombre { font-size: 1rem; font-weight: 700; margin: .25rem 0 .6rem; min-height: 2.4em; }
+.mo-parte-estado { display: inline-block; color: var(--mo-verde); font-weight: 700; font-size: .9rem; padding: .3rem 0; }
+.mo-parte-bloqueada { background: #e9eef0; color: #7d8f99; border-radius: 2rem; font-weight: 700; }
+
+/* Entre 992 y 1199 px el contenedor mide 960 px y el menú tiene 7 enlaces + puntos + avatar:
+   se compactan los enlaces para que la barra no se salga de la pantalla. */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .mo-nav-links .nav-link { padding: .5rem .55rem !important; margin: 0 .05rem; font-size: .93rem; }
+  .mo-navbar .mo-chip-puntos { padding: .3rem .65rem; font-size: .8rem; }
 }

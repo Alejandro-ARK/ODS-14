@@ -71,10 +71,17 @@ class LoginLogoutTests(TestCase):
         self.assertContains(r, 'Correo o contraseña incorrectos.')
         self.assertNotIn('_auth_user_id', self.client.session)
 
-    def test_usuario_inactivo_no_entra(self):
+    def test_usuario_suspendido_no_entra_y_se_le_avisa(self):
         crear(is_active=False)
         r = self.client.post(reverse('usuarios:login'), {'correo': 'ana@correo.co', 'contrasena': 'secreto1'})
+        self.assertContains(r, 'Tu cuenta está suspendida.')
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_suspendido_con_clave_mala_recibe_mensaje_generico(self):
+        crear(is_active=False)
+        r = self.client.post(reverse('usuarios:login'), {'correo': 'ana@correo.co', 'contrasena': 'mala'})
         self.assertContains(r, 'Correo o contraseña incorrectos.')
+        self.assertNotContains(r, 'suspendida')
 
     def test_next_se_respeta_solo_si_es_del_mismo_sitio(self):
         crear()
@@ -143,7 +150,7 @@ class GuardarPuntosTests(TestCase):
         u = crear(puntos=90)
         self.client.force_login(u)
         r = self.client.post(self.url, {'puntos': 20})
-        self.assertEqual(r.json(), {'ok': True, 'puntos': 110, 'nivel': 2})
+        self.assertEqual(r.json(), {'ok': True, 'puntos': 110, 'disponibles': 110, 'nivel': 2})
         u.refresh_from_db()
         self.assertEqual((u.puntos, u.nivel), (110, 2))
 

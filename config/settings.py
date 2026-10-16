@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     # Apps del proyecto
     'core',       # páginas educativas: inicio, aprende, juega, quiz, mares, actúa
     'usuarios',   # cuentas, perfil y puntos
+    'panel',      # panel de administración exclusivo para superusuarios
+    'tienda',     # tienda de avatares: se compran partes con los puntos
 ]
 
 MIDDLEWARE = [

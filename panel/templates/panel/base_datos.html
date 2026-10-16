@@ -1,0 +1,27 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="mo-card">
+  <p class="text-muted small">
+    Motor: <strong>{{ motor }}</strong> · Vista de <strong>solo lectura</strong>: desde aquí no se puede modificar nada.
+  </p>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Tabla</th><th>App</th><th class="text-right">Columnas</th><th class="text-right">Filas</th><th></th></tr></thead>
+      <tbody>
+      {% for t in tablas %}
+        <tr>
+          <td><code>{{ t.tabla }}</code></td>
+          <td class="small text-muted">{{ t.app }}</td>
+          <td class="text-right">{{ t.columnas }}</td>
+          <td class="text-right">{{ t.filas }}</td>
+          <td class="text-right">
+            <a href="{% url 'panel:tabla' t.app t.modelo %}" class="btn btn-sm btn-mo-outline"><i class="fas fa-eye mr-1"></i> Ver</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

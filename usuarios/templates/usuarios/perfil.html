@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
+{% load avatar %}
 
 {% block content %}
 <div class="row">
   <div class="col-md-4 mb-4">
     <div class="mo-card text-center">
-      <span class="mo-avatar mx-auto mb-3" style="width:72px;height:72px;font-size:1.8rem;">
-        {{ user.inicial }}
-      </span>
+      {% avatar user 192 'completo' 'mx-auto mb-3' %}
       <h3 class="mb-0" style="font-size:1.3rem;">{{ user.nombre }}</h3>
       <p class="text-muted small">
         Miembro desde
@@ -19,10 +18,15 @@
           <small class="text-muted">Nivel</small>
         </div>
         <div class="col-6">
-          <h4 class="mb-0 js-puntos-usuario">{{ user.puntos }}</h4>
-          <small class="text-muted">Puntos</small>
+          <h4 class="mb-0 js-puntos-usuario">{{ user.puntos_disponibles }}</h4>
+          <small class="text-muted">Puntos disponibles</small>
         </div>
       </div>
+      <p class="text-muted small mb-3">{{ user.puntos }} pts ganados en total</p>
+
+      <a href="{% url 'tienda:tienda' %}" class="btn btn-mo-azul btn-block mb-2">
+        <i class="fas fa-store mr-1"></i> Personalizar mi avatar
+      </a>
 
       <form method="post" action="{% url 'usuarios:logout' %}">
         {% csrf_token %}
@@ -69,6 +73,7 @@
         <span class="mo-icono-redondo bg-mo-sol" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-award"></i></span>
         Mis insignias
       </h3>
+      <p class="text-muted small">Se desbloquean con tus puntos ganados en total: gastar puntos en la tienda no las bloquea.</p>
       {% for ins in user.insignias %}
         <span class="insignia {% if ins.desbloqueada %}desbloqueada{% else %}bloqueada{% endif %}">
           <i class="fas {{ ins.icono }} mr-1"></i>
@@ -95,6 +100,12 @@
           <a href="{% url 'core:juega' %}" class="mo-acceso">
             <span class="mo-icono-redondo bg-mo-verde" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-gamepad"></i></span>
             <strong>Jugar</strong>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 mb-2">
+          <a href="{% url 'tienda:tienda' %}" class="mo-acceso">
+            <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-store"></i></span>
+            <strong>Tienda</strong>
           </a>
         </div>
       </div>

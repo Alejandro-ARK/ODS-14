@@ -86,4 +86,9 @@ def guardar_puntos(request):
         return JsonResponse({'ok': False, 'error': 'Puntos inválidos.'}, status=400)
 
     request.user.sumar_puntos(puntos)
-    return JsonResponse({'ok': True, 'puntos': request.user.puntos, 'nivel': request.user.nivel})
+    return JsonResponse({
+        'ok': True,
+        'puntos': request.user.puntos,                       # total ganado (de él sale el nivel)
+        'disponibles': request.user.puntos_disponibles,      # lo que se puede gastar en la tienda
+        'nivel': request.user.nivel,
+    })

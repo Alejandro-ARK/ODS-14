@@ -1,0 +1,65 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="mo-card">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+          {{ form.nombre }}
+          {% for e in form.nombre.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.correo.id_for_label }}">{{ form.correo.label }}</label>
+          {{ form.correo }}
+          {% for e in form.correo.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            {{ form.password1 }}
+            {% for e in form.password1.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="form-group col-md-6">
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            {{ form.password2 }}
+            {% for e in form.password2.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.rol.id_for_label }}">{{ form.rol.label }}</label>
+          {{ form.rol }}
+        </div>
+
+        <div class="form-group" id="bloque-password-admin" style="display:none;">
+          <div class="alert alert-warning small">
+            <i class="fas fa-exclamation-triangle mr-1"></i>
+            Un superusuario puede crear, suspender y eliminar cuentas, y ver la base de datos. Confirma con tu contraseña.
+          </div>
+          <label for="{{ form.password_admin.id_for_label }}">{{ form.password_admin.label }}</label>
+          {{ form.password_admin }}
+          {% for e in form.password_admin.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-mo-azul"><i class="fas fa-user-plus mr-1"></i> Crear cuenta</button>
+        <a href="{% url 'panel:usuarios' %}" class="btn btn-link">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    var rol = document.getElementById('{{ form.rol.id_for_label }}');
+    var bloque = document.getElementById('bloque-password-admin');
+    function actualizar() { bloque.style.display = rol.value === 'superusuario' ? 'block' : 'none'; }
+    rol.addEventListener('change', actualizar);
+    actualizar();
+  })();
+</script>
+{% endblock %}

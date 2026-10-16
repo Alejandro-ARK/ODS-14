@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load avatar %}
+
+{% block content %}
+{% for mensaje in messages %}
+  <div class="alert {% if mensaje.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}">{{ mensaje }}</div>
+{% endfor %}
+
+<div class="row">
+  <!-- ============ Tu avatar y tus puntos ============ -->
+  <div class="col-lg-4 mb-4">
+    <div class="mo-tienda-lateral">
+    <div class="mo-card text-center">
+      <h3 class="mo-seccion-titulo justify-content-center" style="font-size:1.1rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-palette"></i></span>
+        Tu avatar
+      </h3>
+
+      {% avatar user 224 'completo' 'mx-auto mb-3' %}
+      <h4 class="mb-1" style="font-size:1.25rem;">{{ user.nombre }}</h4>
+
+      <p class="mo-saldo mb-1">
+        <i class="fas fa-star"></i>
+        <strong class="js-puntos-usuario">{{ user.puntos_disponibles }}</strong> puntos disponibles
+      </p>
+      <p class="text-muted small mb-3">
+        Nivel <span class="js-nivel-usuario">{{ user.nivel }}</span> · {{ user.puntos }} pts ganados en total.
+        Gastar puntos aquí no baja tu nivel.
+      </p>
+
+      <a href="{% url 'core:quiz' %}" class="btn btn-mo-sol btn-sm btn-block"><i class="fas fa-brain mr-1"></i> Ganar puntos con el quiz</a>
+      <a href="{% url 'core:juega' %}" class="btn btn-mo-outline btn-sm btn-block"><i class="fas fa-gamepad mr-1"></i> Ganar puntos jugando</a>
+      <a href="{% url 'usuarios:perfil' %}" class="btn btn-link btn-sm btn-block text-muted">Volver a mi perfil</a>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ Catálogo ============ -->
+  <div class="col-lg-8 mb-4">
+    {% if categoria_activa %}
+      <ul class="nav nav-pills mo-tienda-tabs mb-3">
+        {% for c in categorias %}
+          <li class="nav-item">
+            <a class="nav-link {% if c.clave == activa %}active{% endif %}" href="?categoria={{ c.clave }}">
+              <i class="fas {{ c.icono }} mr-1"></i> {{ c.nombre }}
+              <span class="badge badge-light ml-1" title="Partes que ya tienes">{{ c.tienes }}/{{ c.total }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="row">
+        {% for item in categoria_activa.items %}
+          <div class="col-6 col-md-4 mb-4">
+            <div class="mo-parte {% if item.puesta %}mo-parte-puesta{% endif %}">
+              {% avatar_probando user item.parte 160 'completo' 'mb-2' %}
+              <h5 class="mo-parte-nombre">{{ item.parte.nombre }}</h5>
+
+              {% if item.puesta %}
+                <span class="mo-parte-estado"><i class="fas fa-check-circle"></i> La llevas puesta</span>
+              {% elif item.propia %}
+                <form method="post" action="{% url 'tienda:equipar' item.parte.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-mo-outline btn-sm btn-block">Ponértela</button>
+                </form>
+              {% elif item.falta == 0 %}
+                <form method="post" action="{% url 'tienda:comprar' item.parte.pk %}"
+                      onsubmit="return confirm('¿Comprar «{{ item.parte.nombre|escapejs }}» por {{ item.parte.precio }} puntos?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-mo-azul btn-sm btn-block">
+                    Comprar · {{ item.parte.precio }} <i class="fas fa-star"></i>
+                  </button>
+                </form>
+              {% else %}
+                <button type="button" class="btn btn-sm btn-block mo-parte-bloqueada" disabled>
+                  <i class="fas fa-lock mr-1"></i> {{ item.parte.precio }} <i class="fas fa-star"></i>
+                </button>
+                <small class="text-muted d-block mt-1">Te faltan {{ item.falta }} puntos</small>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="mo-card text-center text-muted">La tienda está vacía por ahora. ¡Vuelve pronto!</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

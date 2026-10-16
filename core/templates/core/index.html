@@ -149,7 +149,7 @@
       </h3>
       {% if user.is_authenticated %}
         <p class="mb-1">Nivel: <strong class="js-nivel-usuario">{{ user.nivel }}</strong></p>
-        <p>Puntos: <strong class="js-puntos-usuario">{{ user.puntos }}</strong></p>
+        <p>Puntos disponibles: <strong class="js-puntos-usuario">{{ user.puntos_disponibles }}</strong></p>
         <div class="mo-progreso mb-2">
           <span style="width: {{ user.porcentaje_nivel }}%"></span>
         </div>

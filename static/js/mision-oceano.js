@@ -38,7 +38,8 @@
       .then(function (data) {
         if (data && data.ok) {
           var badges = document.querySelectorAll('.js-puntos-usuario');
-          badges.forEach(function (b) { b.textContent = data.puntos; });
+          var visibles = (data.disponibles !== undefined) ? data.disponibles : data.puntos;
+          badges.forEach(function (b) { b.textContent = visibles; });
           var niveles = document.querySelectorAll('.js-nivel-usuario');
           niveles.forEach(function (n) { n.textContent = data.nivel; });
         }

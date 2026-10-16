@@ -1,4 +1,4 @@
-{% load static %}<!DOCTYPE html>
+{% load static avatar %}<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
@@ -50,26 +50,32 @@
           <li class="nav-item">
             <a class="nav-link {% if url_actual == 'actua' %}activa{% endif %}" href="{% url 'core:actua' %}">Actúa</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if url_actual == 'tienda' %}activa{% endif %}" href="{% url 'tienda:tienda' %}">Tienda</a>
+          </li>
         </ul>
 
         <ul class="navbar-nav align-items-lg-center">
           {% if user.is_authenticated %}
             <li class="nav-item mr-lg-2">
-              <span class="mo-chip-puntos">
+              <span class="mo-chip-puntos" title="Puntos disponibles para gastar en la tienda">
                 <i class="fas fa-star"></i>
-                <span class="js-puntos-usuario">{{ user.puntos }}</span> pts ·
+                <span class="js-puntos-usuario">{{ user.puntos_disponibles }}</span> pts ·
                 Nivel <span class="js-nivel-usuario">{{ user.nivel }}</span>
               </span>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle mo-avatar-link {% if url_actual == 'perfil' %}activa{% endif %}" href="#" id="mo-user-menu" data-toggle="dropdown">
-                <span class="mo-avatar">{{ user.inicial }}</span>
+                {% avatar user 48 'busto' %}
                 <span class="d-lg-none ml-2">{{ user.nombre }}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="mo-user-menu">
                 <span class="dropdown-item-text text-muted small">Sesión iniciada como<br><strong>{{ user.nombre }}</strong></span>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'usuarios:perfil' %}"><i class="fas fa-user-circle mr-2"></i>Mi perfil</a>
+                {% if user.is_superuser %}
+                  <a class="dropdown-item" href="{% url 'panel:resumen' %}"><i class="fas fa-user-shield mr-2"></i>Panel de administración</a>
+                {% endif %}
                 <form method="post" action="{% url 'usuarios:logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión</button>
@@ -141,6 +147,7 @@
           <li><a href="{% url 'core:quiz' %}">Quiz</a></li>
           <li><a href="{% url 'core:mares' %}">Nuestros mares</a></li>
           <li><a href="{% url 'core:actua' %}">Actúa</a></li>
+          <li><a href="{% url 'tienda:tienda' %}">Tienda</a></li>
         </ul>
       </div>
       <div class="col-6 col-md-4">

@@ -1,0 +1,33 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="mo-card">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-coral" style="width:38px;height:38px;font-size:1rem;"><i class="fas fa-exclamation-triangle"></i></span>
+        ¿Eliminar esta cuenta?
+      </h3>
+      <p class="mb-1"><strong>{{ objetivo.nombre }}</strong>
+        {% if objetivo.is_superuser %}<span class="badge badge-warning ml-1">Superusuario</span>{% endif %}
+      </p>
+      <p class="text-muted">{{ objetivo.correo }} · {{ objetivo.puntos }} pts · nivel {{ objetivo.nivel }}</p>
+      <p>Se borrará de forma <strong>definitiva</strong>, junto con sus puntos y su progreso. Esta acción no se puede deshacer.
+         Si solo quieres impedir que entre, es mejor <em>suspenderla</em>.</p>
+
+      <form method="post">
+        {% csrf_token %}
+        {% if objetivo.is_superuser %}
+          <div class="form-group">
+            <label for="password_admin">Tu contraseña (para confirmar)</label>
+            <input type="password" id="password_admin" name="password_admin" class="form-control {% if error_password %}is-invalid{% endif %}" autocomplete="current-password" required>
+            {% if error_password %}<div class="invalid-feedback">{{ error_password }}</div>{% endif %}
+          </div>
+        {% endif %}
+        <button type="submit" class="btn btn-mo-coral"><i class="fas fa-trash mr-1"></i> Sí, eliminar</button>
+        <a href="{% url 'panel:usuarios' %}" class="btn btn-link">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

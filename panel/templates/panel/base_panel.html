@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="nav nav-pills mb-4">
+  <li class="nav-item">
+    <a class="nav-link {% if seccion == 'resumen' %}active{% endif %}" href="{% url 'panel:resumen' %}"><i class="fas fa-chart-pie mr-1"></i> Resumen</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if seccion == 'usuarios' %}active{% endif %}" href="{% url 'panel:usuarios' %}"><i class="fas fa-users mr-1"></i> Usuarios</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if seccion == 'base_datos' %}active{% endif %}" href="{% url 'panel:base_datos' %}"><i class="fas fa-database mr-1"></i> Base de datos</a>
+  </li>
+</ul>
+
+{% for mensaje in messages %}
+  <div class="alert {% if mensaje.tags == 'error' %}alert-danger{% elif mensaje.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">{{ mensaje }}</div>
+{% endfor %}
+
+{% block panel %}{% endblock %}
+{% endblock %}

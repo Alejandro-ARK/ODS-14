@@ -1,0 +1,87 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block panel %}
+<div class="mo-card mb-4">
+  <form method="get" class="form-row align-items-end">
+    <div class="col-md-5 mb-2">
+      <label class="small mb-1" for="q">Buscar</label>
+      <input type="search" id="q" name="q" value="{{ q }}" class="form-control" placeholder="Correo o nombre">
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+      <label class="small mb-1" for="estado">Estado</label>
+      <select id="estado" name="estado" class="form-control">
+        <option value="">Todos</option>
+        <option value="activos" {% if estado == 'activos' %}selected{% endif %}>Activas</option>
+        <option value="suspendidos" {% if estado == 'suspendidos' %}selected{% endif %}>Suspendidas</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2 mb-2">
+      <label class="small mb-1" for="rol">Tipo</label>
+      <select id="rol" name="rol" class="form-control">
+        <option value="">Todos</option>
+        <option value="superusuarios" {% if rol == 'superusuarios' %}selected{% endif %}>Superusuarios</option>
+        <option value="normales" {% if rol == 'normales' %}selected{% endif %}>Normales</option>
+      </select>
+    </div>
+    <div class="col-md-3 mb-2 d-flex">
+      <button type="submit" class="btn btn-mo-azul mr-2"><i class="fas fa-search"></i></button>
+      <a href="{% url 'panel:usuario_crear' %}" class="btn btn-mo-outline flex-fill"><i class="fas fa-user-plus mr-1"></i> Crear cuenta</a>
+    </div>
+  </form>
+</div>
+
+<div class="mo-card">
+  <p class="text-muted small">{{ pagina.paginator.count }} cuenta{{ pagina.paginator.count|pluralize }}</p>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Usuario</th><th>Progreso</th><th>Registro</th><th>Último acceso</th><th>Estado</th><th class="text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for u in pagina %}
+        <tr>
+          <td>
+            <strong>{{ u.nombre }}</strong>
+            {% if u.is_superuser %}<span class="badge badge-warning ml-1"><i class="fas fa-user-shield"></i> Superusuario</span>{% endif %}
+            {% if u.pk == user.pk %}<span class="badge badge-info ml-1">Tú</span>{% endif %}
+            <br><small class="text-muted">{{ u.correo }}</small>
+          </td>
+          <td class="small">{{ u.puntos }} pts · nivel {{ u.nivel }}</td>
+          <td class="small">{{ u.fecha_registro|date:"d/m/Y" }}</td>
+          <td class="small">{{ u.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+          <td>
+            {% if u.is_active %}<span class="badge badge-success">Activa</span>
+            {% else %}<span class="badge badge-danger">Suspendida</span>{% endif %}
+          </td>
+          <td class="text-right text-nowrap">
+            {% if u.pk == user.pk %}
+              <span class="text-muted small">—</span>
+            {% else %}
+              {% if u.is_active %}
+                <form method="post" action="{% url 'panel:usuario_suspender' u.pk %}" class="d-inline"
+                      onsubmit="return confirm('¿Suspender la cuenta de {{ u.correo|escapejs }}? No podrá iniciar sesión hasta que la reactives.');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-warning" title="Suspender"><i class="fas fa-user-lock"></i> Suspender</button>
+                </form>
+              {% else %}
+                <form method="post" action="{% url 'panel:usuario_reactivar' u.pk %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-success" title="Reactivar"><i class="fas fa-user-check"></i> Reactivar</button>
+                </form>
+              {% endif %}
+              <a href="{% url 'panel:usuario_eliminar' u.pk %}" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="fas fa-trash"></i></a>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No hay cuentas con esos filtros.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include 'panel/paginacion.html' with pagina=pagina filtros_url=filtros_url %}
+</div>
+{% endblock %}
