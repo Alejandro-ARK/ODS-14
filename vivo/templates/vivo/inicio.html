@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'vivo/_mensajes.html' %}
+
+<div class="row">
+  <!-- ============ Unirse con PIN (todos) ============ -->
+  <div class="{% if es_docente %}col-lg-5{% else %}col-lg-6 mx-auto{% endif %} mb-4">
+    <div class="mo-card text-center">
+      <h3 class="mo-seccion-titulo justify-content-center" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-sol" style="width:40px;height:40px;font-size:1rem;"><i class="fas fa-qrcode"></i></span>
+        Unirme a un reto
+      </h3>
+      <p class="text-muted">Escanea con tu celular el QR que proyecta tu docente.
+        Si no puedes, escribe aquí el PIN de 6 dígitos.</p>
+      <form method="post" action="{% url 'vivo:unirse_pin' %}">
+        {% csrf_token %}
+        {{ pin_form.pin }}
+        <button type="submit" class="btn btn-mo-azul btn-block btn-lg mt-3"><i class="fas fa-sign-in-alt mr-1"></i> Entrar</button>
+      </form>
+
+      {% if mis_participaciones %}
+        <hr>
+        <p class="small text-muted mb-2">Tus últimas partidas</p>
+        <ul class="list-unstyled small mb-0">
+        {% for p in mis_participaciones %}
+          <li class="mb-1">
+            <a href="{% url 'vivo:sala' p.sala.pin %}">Sala {{ p.sala.pin }}</a> ·
+            {{ p.sala.get_estado_display }} · {{ p.puntaje }} pts
+            {% if p.puntos_cuenta %}<span class="badge badge-success">+{{ p.puntos_cuenta }} a tu cuenta</span>{% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if es_docente %}
+  <!-- ============ Crear sala (solo docentes, RF-01 / RF-02) ============ -->
+  <div class="col-lg-7 mb-4">
+    <div class="mo-card">
+      <h3 class="mo-seccion-titulo" style="font-size:1.2rem;">
+        <span class="mo-icono-redondo bg-mo-turquesa" style="width:40px;height:40px;font-size:1rem;"><i class="fas fa-chalkboard-teacher"></i></span>
+        Crear una sala
+      </h3>
+      <p class="text-muted small">Se eligen preguntas al azar del banco ({{ banco }} disponibles).
+        Al crearla verás el QR y el PIN para proyectar en el tablero.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="{{ sala_form.cantidad.id_for_label }}">{{ sala_form.cantidad.label }} <small class="text-muted">(5 a 15)</small></label>
+            {{ sala_form.cantidad }}
+            {% for e in sala_form.cantidad.errors %}<small class="text-danger">{{ e }}</small>{% endfor %}
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="{{ sala_form.segundos.id_for_label }}">{{ sala_form.segundos.label }} <small class="text-muted">(10 a 30)</small></label>
+            {{ sala_form.segundos }}
+            {% for e in sala_form.segundos.errors %}<small class="text-danger">{{ e }}</small>{% endfor %}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-mo-sol btn-block"><i class="fas fa-plus-circle mr-1"></i> Crear sala</button>
+      </form>
+
+      {% if mis_salas %}
+        <hr>
+        <h6>Mis salas</h6>
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>PIN</th><th>Estado</th><th>Creada</th><th></th></tr></thead>
+            <tbody>
+            {% for s in mis_salas %}
+              <tr>
+                <td><a href="{% url 'vivo:sala' s.pin %}"><strong>{{ s.pin }}</strong></a></td>
+                <td>{{ s.get_estado_display }}</td>
+                <td class="small">{{ s.creada_en|date:"d/m/Y H:i" }}</td>
+                <td class="text-right text-nowrap">
+                  <a href="{% url 'vivo:sala' s.pin %}" class="btn btn-sm btn-mo-outline">Abrir</a>
+                  <form method="post" action="{% url 'vivo:eliminar' s.pin %}" class="d-inline"
+                        onsubmit="return confirm('¿Eliminar la sala {{ s.pin }} y sus resultados?');">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="mo-card mo-card-sm">
+  <h5><i class="fas fa-info-circle mr-1"></i> ¿Cómo funciona?</h5>
+  <ol class="mb-0 small">
+    <li>El docente crea la sala y proyecta el QR (cambia cada 5 minutos y vence a los 10).</li>
+    <li>Cada estudiante lo escanea, inicia sesión si hace falta y queda en la sala de espera.</li>
+    <li>Todos reciben la misma pregunta al mismo tiempo. Acertar rápido da más puntos (hasta 1000 por pregunta).</li>
+    <li>Después de cada pregunta se ve la respuesta correcta y el top 5. Al final, el podio.</li>
+    <li>Los puntos de la partida (hasta 100) se suman a tu cuenta, a tu nivel y a tus insignias.</li>
+  </ol>
+  {% if not es_docente %}
+    <p class="small text-muted mt-2 mb-0">¿Eres docente? Pide a un administrador que te agregue al grupo «Docentes» para poder crear salas.</p>
+  {% endif %}
+</div>
+{% endblock %}

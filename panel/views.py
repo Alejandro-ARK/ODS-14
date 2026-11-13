@@ -4,11 +4,12 @@ from django.apps import apps
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import connection, transaction
-from django.db.models import Q, Sum
+from django.db.models import Count, Q, Sum
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.generic import FormView, TemplateView
 
@@ -82,6 +83,9 @@ class UsuariosView(PanelMixin, TemplateView):
             usuarios = usuarios.filter(is_superuser=True)
         elif rol == 'normales':
             usuarios = usuarios.filter(is_superuser=False)
+        elif rol == 'docentes':
+            usuarios = usuarios.filter(groups__name='Docentes')
+        usuarios = usuarios.annotate(es_docente=Count('groups', filter=Q(groups__name='Docentes')))
 
         pagina = Paginator(usuarios.order_by('-fecha_registro', '-pk'), USUARIOS_POR_PAGINA)
         pagina = pagina.get_page(self.request.GET.get('page'))
@@ -160,6 +164,26 @@ class ReactivarUsuarioView(_AccionSobreUsuarioView):
         objetivo.save(update_fields=['is_active'])
         messages.success(request, f'La cuenta {objetivo.correo} fue reactivada.')
         return redirect('panel:usuarios')
+
+
+class DocenteUsuarioView(_AccionSobreUsuarioView):
+    """Reto en vivo (RF-01): agrega o quita la cuenta del grupo «Docentes»."""
+    def post(self, request, pk):
+        from django.contrib.auth.models import Group
+        from vivo.models import GRUPO_DOCENTES
+
+        objetivo = self.objetivo(pk)
+        grupo, _ = Group.objects.get_or_create(name=GRUPO_DOCENTES)
+        if objetivo.groups.filter(pk=grupo.pk).exists():
+            objetivo.groups.remove(grupo)
+            messages.success(request, f'{objetivo.correo} ya no es docente.')
+        else:
+            objetivo.groups.add(grupo)
+            messages.success(request, f'{objetivo.correo} ahora es docente: puede crear salas en «Reto en vivo».')
+        volver = request.POST.get('volver', '')
+        if not url_has_allowed_host_and_scheme(volver, allowed_hosts={request.get_host()}):
+            volver = 'panel:usuarios'
+        return redirect(volver)
 
 
 class EliminarUsuarioView(PanelMixin, TemplateView):

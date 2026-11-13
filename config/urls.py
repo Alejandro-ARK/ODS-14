@@ -5,6 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('panel/', include('panel.urls')),   # panel de superusuarios (usuarios + base de datos)
     path('tienda/', include('tienda.urls')), # tienda de avatares
+    path('vivo/', include('vivo.urls')),     # reto multijugador en vivo (QR dinámico + WebSockets)
     path('', include('usuarios.urls')),   # login, registro, perfil, logout, guardar-puntos
     path('', include('core.urls')),       # páginas educativas
 ]

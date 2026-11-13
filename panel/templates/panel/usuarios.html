@@ -21,6 +21,7 @@
         <option value="">Todos</option>
         <option value="superusuarios" {% if rol == 'superusuarios' %}selected{% endif %}>Superusuarios</option>
         <option value="normales" {% if rol == 'normales' %}selected{% endif %}>Normales</option>
+        <option value="docentes" {% if rol == 'docentes' %}selected{% endif %}>Docentes</option>
       </select>
     </div>
     <div class="col-md-3 mb-2 d-flex">
@@ -45,6 +46,7 @@
           <td>
             <strong>{{ u.nombre }}</strong>
             {% if u.is_superuser %}<span class="badge badge-warning ml-1"><i class="fas fa-user-shield"></i> Superusuario</span>{% endif %}
+            {% if u.es_docente %}<span class="badge badge-primary ml-1"><i class="fas fa-chalkboard-teacher"></i> Docente</span>{% endif %}
             {% if u.pk == user.pk %}<span class="badge badge-info ml-1">Tú</span>{% endif %}
             <br><small class="text-muted">{{ u.correo }}</small>
           </td>
@@ -71,6 +73,13 @@
                   <button type="submit" class="btn btn-sm btn-outline-success" title="Reactivar"><i class="fas fa-user-check"></i> Reactivar</button>
                 </form>
               {% endif %}
+              <form method="post" action="{% url 'panel:usuario_docente' u.pk %}" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="volver" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-sm btn-outline-primary" title="{% if u.es_docente %}Quitar rol docente{% else %}Hacer docente{% endif %}">
+                  <i class="fas fa-chalkboard-teacher"></i> {% if u.es_docente %}Quitar docente{% else %}Docente{% endif %}
+                </button>
+              </form>
               <a href="{% url 'panel:usuario_eliminar' u.pk %}" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="fas fa-trash"></i></a>
             {% endif %}
           </td>

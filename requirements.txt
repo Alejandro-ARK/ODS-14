@@ -1,8 +1,14 @@
 Django>=5.2,<6.2
 bcrypt>=4.0                  # lee los hashes de contraseña generados por PHP (password_hash)
 
+# --- Reto en vivo (WebSockets + QR dinámico) ---
+channels>=4.1,<5             # Django Channels: WebSockets
+channels-redis>=4.2          # capa de canales sobre Redis (Render Key Value / Upstash)
+daphne>=4.1                  # servidor ASGI: sirve HTTP y WebSockets
+qrcode>=7.4                  # genera el QR en SVG (no necesita Pillow)
+
 # --- Despliegue (Render) ---
-gunicorn>=22.0               # servidor de producción
+gunicorn>=22.0               # servidor WSGI (ya no es el de inicio: ahora se usa daphne)
 whitenoise>=6.6              # sirve CSS/JS/fuentes sin necesitar Nginx
 dj-database-url>=2.1         # lee DATABASE_URL
 psycopg[binary]>=3.1         # driver de PostgreSQL

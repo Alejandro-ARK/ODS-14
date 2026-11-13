@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="reto" class="mo-reto mo-reto-estudiante" data-rol="estudiante" data-pin="{{ sala.pin }}">
+
+  <div class="mo-reto-conexion" data-conexion>Conectando…</div>
+
+  <div class="mo-reto-marcador">
+    <span><i class="fas fa-star"></i> <strong data-mi-puntaje>0</strong> pts</span>
+    <span><i class="fas fa-medal"></i> Puesto <strong data-mi-posicion>–</strong></span>
+    <span><i class="fas fa-users"></i> <strong data-num-jugadores>0</strong></span>
+  </div>
+
+  <div class="mo-card mo-reto-escenario">
+    <!-- Espera -->
+    <section data-vista="espera" class="text-center">
+      <div class="mo-reto-burbujas"><i class="fas fa-fish fa-3x"></i></div>
+      <h3>¡Ya estás dentro!</h3>
+      <p class="text-muted mb-0">Espera a que tu docente inicie la partida. Mira el tablero.</p>
+    </section>
+
+    <!-- Pregunta: 4 botones grandes de colores -->
+    <section data-vista="pregunta" hidden>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="badge badge-pill badge-info" data-progreso></span>
+        <span class="mo-reto-reloj" data-reloj>--</span>
+      </div>
+      <div class="mo-reto-barra"><span data-barra></span></div>
+      <h4 class="mo-reto-enunciado" data-enunciado></h4>
+      <div class="mo-reto-opciones" data-opciones></div>
+    </section>
+
+    <!-- Respuesta enviada -->
+    <section data-vista="enviada" class="text-center" hidden>
+      <i class="fas fa-paper-plane fa-3x text-info mb-3"></i>
+      <h3>¡Respuesta enviada!</h3>
+      <p class="text-muted mb-0" data-motivo>Espera a que se cierre la pregunta para saber si acertaste.</p>
+    </section>
+
+    <!-- Resultados de la pregunta -->
+    <section data-vista="resultados" class="text-center" hidden>
+      <div data-mi-resultado class="mo-reto-mi-resultado"></div>
+      <div class="mo-reto-correcta"><i class="fas fa-check-circle"></i> <span data-correcta></span></div>
+      <p class="text-muted" data-aciertos></p>
+      <h6 class="text-left"><i class="fas fa-trophy text-warning"></i> Top 5</h6>
+      <ol class="mo-reto-ranking text-left" data-ranking></ol>
+    </section>
+
+    <!-- Podio -->
+    <section data-vista="podio" class="text-center" hidden>
+      <h3><i class="fas fa-trophy text-warning"></i> ¡Fin del reto!</h3>
+      <div class="mo-reto-podio" data-podio></div>
+      <div class="mo-reto-mi-resultado" data-mi-final></div>
+      <a href="{% url 'usuarios:perfil' %}" class="btn btn-mo-azul mt-2"><i class="fas fa-user-circle mr-1"></i> Ver mi perfil</a>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/reto-vivo.js' %}"></script>
+{% endblock %}

@@ -24,15 +24,7 @@ class _SoloAnonimosMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class LoginView(_SoloAnonimosMixin, FormView):
-    template_name = 'usuarios/login.html'
-    form_class = LoginForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
+class _NextSeguroMixin:
     def get_success_url(self):
         # Respeta ?next=/ruta/ (lo añade @login_required), solo si es del mismo sitio.
         destino = self.request.POST.get('next') or self.request.GET.get('next')
@@ -42,19 +34,29 @@ class LoginView(_SoloAnonimosMixin, FormView):
             return destino
         return resolve_url('core:inicio')
 
+
+class LoginView(_SoloAnonimosMixin, _NextSeguroMixin, FormView):
+    template_name = 'usuarios/login.html'
+    form_class = LoginForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form):
         login(self.request, form.usuario)
         return redirect(self.get_success_url())
 
 
-class RegistroView(_SoloAnonimosMixin, FormView):
+class RegistroView(_SoloAnonimosMixin, _NextSeguroMixin, FormView):
     template_name = 'usuarios/registro.html'
     form_class = RegistroForm
 
     def form_valid(self, form):
         usuario = form.save()
         login(self.request, usuario)   # el registro inicia sesión automáticamente
-        return redirect('core:inicio')
+        return redirect(self.get_success_url())   # p. ej. de vuelta al QR del reto en vivo
 
 
 class PerfilView(LoginRequiredMixin, HeroMixin, SuccessMessageMixin, UpdateView):

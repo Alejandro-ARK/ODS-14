@@ -33,7 +33,7 @@
       <div class="collapse navbar-collapse" id="mo-menu">
         <ul class="navbar-nav mo-nav-links mx-lg-auto">
           <li class="nav-item">
-            <a class="nav-link {% if url_actual == 'inicio' %}activa{% endif %}" href="{% url 'core:inicio' %}">Inicio</a>
+            <a class="nav-link {% if url_actual == 'inicio' and request.resolver_match.app_name == 'core' %}activa{% endif %}" href="{% url 'core:inicio' %}">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if url_actual == 'aprende' %}activa{% endif %}" href="{% url 'core:aprende' %}">Aprende</a>
@@ -52,6 +52,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link {% if url_actual == 'tienda' %}activa{% endif %}" href="{% url 'tienda:tienda' %}">Tienda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.app_name == 'vivo' %}activa{% endif %}" href="{% url 'vivo:inicio' %}"><i class="fas fa-broadcast-tower mr-1"></i>Reto en vivo</a>
           </li>
         </ul>
 
@@ -148,6 +151,7 @@
           <li><a href="{% url 'core:mares' %}">Nuestros mares</a></li>
           <li><a href="{% url 'core:actua' %}">Actúa</a></li>
           <li><a href="{% url 'tienda:tienda' %}">Tienda</a></li>
+          <li><a href="{% url 'vivo:inicio' %}">Reto en vivo</a></li>
         </ul>
       </div>
       <div class="col-6 col-md-4">

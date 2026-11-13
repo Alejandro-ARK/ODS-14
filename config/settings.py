@@ -56,6 +56,7 @@ if not DEBUG and SECRET_KEY == _CLAVE_DE_DESARROLLO:
 # Aplicaciones
 # ---------------------------------------------------------------------------
 INSTALLED_APPS = [
+    'daphne',     # servidor ASGI (HTTP + WebSockets); debe ir PRIMERO para que runserver lo use
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,6 +68,8 @@ INSTALLED_APPS = [
     'usuarios',   # cuentas, perfil y puntos
     'panel',      # panel de administración exclusivo para superusuarios
     'tienda',     # tienda de avatares: se compran partes con los puntos
+    'channels',   # WebSockets (Django Channels)
+    'vivo',       # reto multijugador en vivo con QR dinámico
 ]
 
 MIDDLEWARE = [
@@ -98,7 +101,24 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
+ASGI_APPLICATION = 'config.asgi.application'   # Daphne: HTTP + WebSockets del reto en vivo
+
+# ---------------------------------------------------------------------------
+# Capa de canales (difunde los eventos del reto a todos los participantes)
+#   - Con REDIS_URL (Render Key Value o Upstash) usa Redis: obligatorio en producción.
+#   - Sin REDIS_URL usa memoria: sirve solo en desarrollo, con un único proceso.
+# ---------------------------------------------------------------------------
+if os.environ.get('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            # socket_timeout > 5 s: desde redis-py 8 el límite por defecto es 5 s, igual a la espera
+            # interna de channels-redis, y las conexiones se cortaban con «Timeout reading from».
+            'CONFIG': {'hosts': [{'address': os.environ['REDIS_URL'], 'socket_timeout': 30}]},
+        },
+    }
+else:
+    CHANNEL_LAYERS = {'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'}}
 
 # ---------------------------------------------------------------------------
 # Base de datos
@@ -108,7 +128,10 @@ ASGI_APPLICATION = 'config.asgi.application'
 if os.environ.get('DATABASE_URL'):
     # Render entrega la base PostgreSQL como una sola URL.
     import dj_database_url
-    DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
+    # Con ASGI (Daphne) cada hilo abriría su propia conexión persistente y se agotaría el
+    # límite del plan gratuito; por eso por defecto se cierra la conexión tras cada uso.
+    DATABASES = {'default': dj_database_url.config(
+        conn_max_age=int(os.environ.get('DB_CONN_MAX_AGE', '0')), conn_health_checks=True)}
 elif os.environ.get('DB_ENGINE', 'sqlite') == 'mysql':
     DATABASES = {
         'default': {

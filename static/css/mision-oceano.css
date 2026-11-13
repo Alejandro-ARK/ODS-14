@@ -635,3 +635,96 @@ a:hover { color: var(--mo-profundo); }
   .mo-nav-links .nav-link { padding: .5rem .55rem !important; margin: 0 .05rem; font-size: .93rem; }
   .mo-navbar .mo-chip-puntos { padding: .3rem .65rem; font-size: .8rem; }
 }
+
+/* =====================================================================
+   RETO EN VIVO (app "vivo")
+   ===================================================================== */
+.mo-pin-input { font-family: 'Baloo 2', monospace; font-size: 2rem; letter-spacing: .4em; }
+
+.mo-reto { position: relative; }
+.mo-reto-conexion {
+  display: inline-block; margin-bottom: .75rem; padding: .2rem .8rem; border-radius: 999px;
+  font-size: .8rem; font-weight: 700; background: #ffe3e3; color: #a12828;
+}
+.mo-reto-conexion.ok { background: #d9f6ef; color: #05735a; }
+.mo-reto-conexion.ok::before { content: '● '; animation: mo-latido 1.4s infinite; }
+@keyframes mo-latido { 50% { opacity: .2; } }
+
+.mo-reto-qr { width: 100%; max-width: 320px; background: #fff; border-radius: .6rem; padding: .5rem; }
+.mo-reto-qr-chico .mo-reto-qr { max-width: 160px; }
+.mo-reto-pin {
+  font-family: 'Baloo 2', monospace; font-weight: 700; font-size: 3rem; letter-spacing: .25em;
+  color: var(--mo-profundo); line-height: 1.1; margin: .25rem 0 .5rem;
+}
+.mo-reto-qr-chico .mo-reto-pin { font-size: 2rem; }
+
+.mo-reto-jugadores { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem; max-height: 260px; overflow-y: auto; }
+.mo-reto-jugadores li { background: var(--mo-arena); border-radius: 999px; padding: .2rem .75rem; font-weight: 600; font-size: .9rem; }
+
+.mo-reto-escenario { min-height: 340px; }
+.mo-reto-enunciado { text-align: center; margin: 1rem 0 1.25rem; }
+.mo-reto-reloj {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 2.2rem; color: var(--mo-profundo);
+  min-width: 3.5rem; text-align: center; background: var(--mo-arena); border-radius: 50%; line-height: 3.5rem; height: 3.5rem;
+}
+.mo-reto-barra { height: 8px; border-radius: 99px; background: #e3eef2; overflow: hidden; }
+.mo-reto-barra span { display: block; height: 100%; background: var(--mo-turquesa); transition: width .1s linear; }
+
+.mo-reto-opciones { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.mo-reto-opcion {
+  display: flex; align-items: center; gap: .75rem; min-height: 96px; padding: 1rem;
+  border: 0; border-radius: var(--mo-radio); color: #fff; font-weight: 700; font-size: 1.05rem;
+  text-align: left; box-shadow: var(--mo-sombra); transition: transform .1s, opacity .2s;
+}
+.mo-reto-opcion i { font-size: 1.4rem; opacity: .85; }
+button.mo-reto-opcion:active { transform: scale(.97); }
+button.mo-reto-opcion:disabled { opacity: .45; }
+.mo-reto-opciones-proyector .mo-reto-opcion { font-size: 1.35rem; min-height: 110px; }
+.mo-reto-coral { background: var(--mo-coral); }
+.mo-reto-azul  { background: var(--mo-azul); }
+.mo-reto-sol   { background: #E09A00; }
+.mo-reto-verde { background: var(--mo-verde); }
+@media (max-width: 575px) {
+  .mo-reto-estudiante .mo-reto-opciones { grid-template-columns: 1fr; }
+  .mo-reto-estudiante .mo-reto-opcion { min-height: 72px; }
+}
+
+.mo-reto-correcta {
+  margin: 1rem auto; padding: .9rem 1.2rem; border-radius: var(--mo-radio); max-width: 640px;
+  background: #d9f6ef; color: #05634d; font-weight: 700; font-size: 1.2rem; text-align: center;
+}
+.mo-reto-ranking { padding-left: 1.4rem; margin-bottom: 0; }
+.mo-reto-ranking li { padding: .35rem 0; border-bottom: 1px dashed #dbe7ec; }
+.mo-reto-ranking li .nombre { font-weight: 700; }
+.mo-reto-ranking li .pts { float: right; color: var(--mo-azul); font-weight: 700; }
+
+.mo-reto-marcador {
+  display: flex; justify-content: space-around; background: var(--mo-profundo); color: #fff;
+  border-radius: var(--mo-radio); padding: .6rem; margin-bottom: 1rem; font-size: 1.05rem;
+}
+.mo-reto-marcador i { color: var(--mo-sol); }
+
+.mo-reto-mi-resultado { border-radius: var(--mo-radio); padding: 1rem; margin-bottom: 1rem; color: #fff; }
+.mo-reto-mi-resultado.acierto { background: var(--mo-verde); }
+.mo-reto-mi-resultado.fallo { background: var(--mo-coral); }
+.mo-reto-mi-resultado:empty { display: none; }
+
+.mo-reto-podio { display: flex; align-items: flex-end; justify-content: center; gap: .75rem; margin: 1.5rem 0; }
+.mo-reto-escalon { background: var(--mo-arena); border-radius: var(--mo-radio) var(--mo-radio) 0 0; padding: .75rem; width: 30%; max-width: 180px; text-align: center; }
+.mo-reto-escalon .medalla { font-size: 2.2rem; }
+.mo-reto-escalon .nombre { font-weight: 700; word-break: break-word; }
+.mo-reto-escalon .pts { color: var(--mo-azul); font-weight: 700; }
+.mo-reto-escalon-1 { order: 2; min-height: 190px; background: #ffe8a8; }
+.mo-reto-escalon-2 { order: 1; min-height: 150px; }
+.mo-reto-escalon-3 { order: 3; min-height: 120px; }
+
+.mo-reto-controles { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e3eef2; }
+.mo-reto-burbujas { color: var(--mo-turquesa); margin-bottom: 1rem; animation: mo-nadar 3s ease-in-out infinite; }
+@keyframes mo-nadar { 50% { transform: translateX(14px); } }
+[hidden] { display: none !important; }
+
+/* Con «Reto en vivo» la barra tiene 8 enlaces: en pantallas anchas se compactan para que no se partan. */
+@media (min-width: 1200px) {
+  .mo-nav-links .nav-link { padding: .45rem .7rem !important; margin: 0 .05rem; white-space: nowrap; }
+  .mo-chip-puntos { white-space: nowrap; }
+}

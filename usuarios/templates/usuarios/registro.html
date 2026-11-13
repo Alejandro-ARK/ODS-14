@@ -4,7 +4,8 @@
 {% block subtitulo %}Crea tu cuenta y empieza a sumar puntos{% endblock %}
 
 {% block formulario %}
-    <form method="post" action="{% url 'usuarios:registro' %}">
+    {# Sin "action" propio para conservar ?next=... (p. ej. al llegar desde el QR del reto en vivo) #}
+    <form method="post">
       {% csrf_token %}
       <div class="form-group">
         <label for="{{ form.nombre.id_for_label }}">Nombre de perfil</label>
@@ -29,6 +30,6 @@
 
 {% block pie %}
     <p class="mo-auth-pie mb-1">
-      ¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}">Inicia sesión</a>
+      ¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Inicia sesión</a>
     </p>
 {% endblock %}

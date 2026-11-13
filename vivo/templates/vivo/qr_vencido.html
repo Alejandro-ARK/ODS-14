@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-6 mx-auto">
+    <div class="mo-card text-center">
+      <div class="mo-icono-redondo bg-mo-coral mx-auto mb-3" style="width:64px;height:64px;font-size:1.6rem;"><i class="fas fa-hourglass-end"></i></div>
+      {% if cerrada %}
+        <h3>Esa sala ya terminó</h3>
+        <p class="text-muted">La partida finalizó o fue eliminada. Pídele a tu docente el PIN de la sala nueva.</p>
+      {% else %}
+        <h3>QR vencido</h3>
+        <p class="text-muted">Este código ya no es válido (vence a los 10 minutos o fue alterado).
+          Escanea el QR que se ve ahora en el tablero o escribe el PIN.</p>
+      {% endif %}
+      <a href="{% url 'vivo:inicio' %}" class="btn btn-mo-azul"><i class="fas fa-keyboard mr-1"></i> Entrar con el PIN</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

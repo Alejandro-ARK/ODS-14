@@ -21,6 +21,6 @@
 
 {% block pie %}
     <p class="mo-auth-pie mb-1">
-      ¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}">Regístrate aquí</a>
+      ¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Regístrate aquí</a>
     </p>
 {% endblock %}

@@ -4,7 +4,8 @@ Plataforma web educativa sobre el **ODS 14 – Vida submarina** de las Naciones 
 (*conservar y utilizar de forma sostenible los océanos, los mares y los recursos marinos*).
 
 Quien la usa **aprende** sobre el océano, **juega**, responde un **quiz**, gana **puntos**, sube de **nivel** y
-gasta esos puntos en una **tienda** para personalizar su **avatar**. Los administradores gestionan las
+gasta esos puntos en una **tienda** para personalizar su **avatar**. En clase, el docente puede lanzar un
+**reto en vivo**: los estudiantes entran escaneando un QR y compiten al mismo tiempo con ranking en tiempo real. Los administradores gestionan las
 cuentas desde un **panel** propio. Está hecha con **Django** (Python).
 
 | | |
@@ -46,6 +47,7 @@ cuentas desde un **panel** propio. Está hecha con **Django** (Python).
 | Registro / Inicio de sesión | `/registro/`, `/login/` | Creación de cuenta e ingreso con correo y contraseña. |
 | Mi perfil | `/perfil/` | Avatar, nivel, puntos, insignias y cambio del nombre de perfil. |
 | Tienda | `/tienda/` | Compra y cambio de partes del avatar usando los puntos ganados. |
+| Reto en vivo | `/vivo/` | Concurso en tiempo real: el docente crea la sala y proyecta un **QR dinámico**; los estudiantes responden desde el celular y ven el ranking tras cada pregunta. Ver [`docs/RETO_EN_VIVO.md`](docs/RETO_EN_VIVO.md). |
 | Panel de administración | `/panel/` | **Solo superusuarios**: resumen, gestión de cuentas y consulta de la base de datos. |
 | Admin de Django | `/admin/` | Edición avanzada: cuentas, catálogo de partes del avatar y sus precios. |
 
@@ -60,8 +62,10 @@ cuentas desde un **panel** propio. Está hecha con **Django** (Python).
 | Base de datos | **PostgreSQL** (producción), **SQLite** (local), MySQL (opcional) | Almacenamiento de cuentas, catálogo y compras. |
 | Interfaz | HTML5 + plantillas de Django, CSS propio, **Bootstrap 4.6**, Font Awesome 5 | Páginas y estilos. |
 | Interactividad | JavaScript (sin framework) + jQuery/Bootstrap JS | Quiz, minijuegos, contador de puntos, menús. |
-| Servidor de producción | **Gunicorn** + **WhiteNoise** | Ejecuta la app y sirve los archivos estáticos. |
-| Hosting | **Render** (servicio web + PostgreSQL) enlazado a GitHub | Despliegue automático en cada `git push`. |
+| Tiempo real | **Django Channels 4** + **channels-redis** | WebSockets del reto en vivo; Redis (Render Key Value) reparte cada evento a todos los participantes. |
+| Servidor de producción | **Daphne** (ASGI) + **WhiteNoise** | Sirve HTTP y WebSockets, y los archivos estáticos. |
+| QR | `qrcode` (SVG) + `django.core.signing` | QR con token firmado que vence a los 10 minutos. |
+| Hosting | **Render** (servicio web + PostgreSQL + Key Value) enlazado a GitHub | Despliegue automático en cada `git push`. |
 | Librerías | `psycopg` (PostgreSQL), `dj-database-url`, `bcrypt` | Conexión a la base y lectura de contraseñas con hash bcrypt. |
 
 Todas las dependencias de Python están en `requirements.txt`.
@@ -126,6 +130,8 @@ En el archivo `.env` no pongas comentarios al final de la línea de un valor.
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | Orígenes `https://…` de confianza (solo con dominio propio). | vacío | Solo con dominio propio |
 | `RENDER_EXTERNAL_HOSTNAME` | La define Render sola; se añade a los hosts permitidos y a los orígenes CSRF. | — | No |
 | `DATABASE_URL` | URL de PostgreSQL. **Tiene prioridad** sobre las demás opciones de base de datos. | — | En producción |
+| `REDIS_URL` | URL de Redis para el reto en vivo (Render Key Value o Upstash). Sin ella se usa memoria (solo desarrollo). | — | En producción |
+| `DB_CONN_MAX_AGE` | Segundos que se reutiliza una conexión a PostgreSQL. Con ASGI conviene `0`. | `0` | No |
 | `DB_ENGINE` | `sqlite` o `mysql`. | `sqlite` | No |
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | Datos de conexión de MySQL (solo con `DB_ENGINE=mysql`). | `mision_oceano_django`, `root`, vacío, `localhost`, `3306` | No |
 | `DJANGO_SECRET_KEY` aparte, `DJANGO_SUPERUSER_CORREO`, `DJANGO_SUPERUSER_NOMBRE`, `DJANGO_SUPERUSER_PASSWORD` | Las usa `build.sh` para crear un administrador durante el despliegue. | — | No |
@@ -199,9 +205,10 @@ temporal llamada `test_<nombre>` (el usuario de la base necesita permiso para cr
 |---|---|
 | `python manage.py migrate` | Crea o actualiza las tablas según las migraciones. |
 | `python manage.py createsuperuser` | Crea un administrador (correo, nombre, contraseña). |
-| `python manage.py runserver` | Servidor de desarrollo en el puerto 8000. |
+| `python manage.py runserver` | Servidor de desarrollo en el puerto 8000 (con `daphne` instalado, también sirve WebSockets). |
 | `python manage.py collectstatic` | Reúne CSS/JS/imágenes en `staticfiles/` (producción). |
 | `python manage.py test` | Ejecuta las pruebas automáticas. |
+| `python scripts/prueba_carga.py --url URL --pin PIN --jugadores 30` | Prueba de carga del reto en vivo con jugadores simulados (requiere `pip install websockets`). |
 | `python manage.py importar_usuarios archivo.csv` | Carga cuentas desde un CSV con columnas `correo, nombre, contrasena (hash), puntos, nivel, fecha_registro`. |
 
 ### 3.8 Despliegue en Render
@@ -210,19 +217,20 @@ Guía detallada: [`DESPLIEGUE_RENDER.md`](DESPLIEGUE_RENDER.md). En resumen:
 
 1. El repositorio de GitHub debe tener `manage.py` y `build.sh` **en la raíz** (no dentro de otra carpeta).
 2. En Render: **New → PostgreSQL** (plan Free) y copia su **Internal Database URL**.
-3. **New → Web Service** → elige el repositorio y configura:
+3. **New → Key Value** (plan Free, misma región) y copia su **Internal Key Value URL** (para el reto en vivo).
+4. **New → Web Service** → elige el repositorio y configura:
 
 | Campo | Valor |
 |---|---|
 | Runtime | Python 3 |
 | Build Command | `bash build.sh` |
-| Start Command | `gunicorn config.wsgi:application` |
+| Start Command | `daphne -b 0.0.0.0 -p $PORT config.asgi:application` |
 | Root Directory | *(vacío)* |
 
-4. En **Environment** agrega: `PYTHON_VERSION=3.12.3`, `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY=<clave larga>`,
-   `DATABASE_URL=<Internal Database URL>` y, si quieres un administrador inicial,
+5. En **Environment** agrega: `PYTHON_VERSION=3.12.3`, `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY=<clave larga>`,
+   `DATABASE_URL=<Internal Database URL>`, `REDIS_URL=<Internal Key Value URL>` y, si quieres un administrador inicial,
    `DJANGO_SUPERUSER_CORREO`, `DJANGO_SUPERUSER_NOMBRE`, `DJANGO_SUPERUSER_PASSWORD`.
-5. Cada `git push` a la rama `main` vuelve a desplegar. (Alternativa: **New → Blueprint**, que lee `render.yaml`.)
+6. Cada `git push` a la rama `main` vuelve a desplegar. (Alternativa: **New → Blueprint**, que lee `render.yaml`.)
 
 **¿Qué hace `build.sh` en cada despliegue?**
 
@@ -284,24 +292,28 @@ ODS-14/
 ├── config/                 # configuración global
 │   ├── settings.py         #   ajustes: variables de entorno, base de datos, estáticos…
 │   ├── urls.py             #   rutas principales
-│   └── wsgi.py · asgi.py   #   entrada del servidor
+│   └── wsgi.py · asgi.py   #   entrada del servidor (asgi.py: HTTP + WebSockets con Daphne)
 ├── core/                   # páginas educativas (inicio, aprende, juega, quiz, mares, actúa)
 ├── usuarios/               # cuentas, perfil, puntos, avatar y modelos de la tienda
 ├── tienda/                 # tienda de avatares (comprar y equipar partes)
 ├── panel/                  # panel exclusivo de superusuarios
+├── vivo/                   # reto multijugador en vivo: QR dinámico, WebSockets, ranking
 ├── templates/              # base.html (barra, franja de título, pie) y base_auth.html
 ├── static/                 # css/ · js/ · avatar/ (16 PNG) · plugins/ (Font Awesome, jQuery, Bootstrap JS)
+├── scripts/                # prueba_carga.py (reto en vivo con N jugadores simulados)
+├── docs/                   # RETO_EN_VIVO.md: requerimientos, DER y diagrama de secuencia
 └── database/               # schema.sql, dump con datos de ejemplo y diagramas entidad-relación
 ```
 
-### 4.3 Las cuatro apps
+### 4.3 Las cinco apps
 
 | App | Responsabilidad | Archivos clave |
 |---|---|---|
 | **`core`** | Páginas informativas e interactivas. Casi no tiene lógica de servidor: las vistas solo muestran plantillas; el juego ocurre en el navegador. | `views.py` (una vista por página), `mixins.py` (`HeroMixin`), `templatetags/oceano.py` (burbujas animadas del login) |
 | **`usuarios`** | Todo lo de la **cuenta**: modelo de usuario con correo como identificador, registro, login, perfil, puntos y avatar. Aquí viven los modelos de la tienda. | `models.py`, `forms.py`, `views.py`, `admin.py`, `templatetags/avatar.py`, `migrations/`, `management/commands/importar_usuarios.py` |
 | **`tienda`** | Pantalla de la tienda y las acciones **comprar** y **equipar**. La lógica de negocio está en el modelo (`Usuario.comprar()`), no en la vista. | `views.py`, `urls.py`, `templates/tienda/tienda.html` |
-| **`panel`** | Panel de administración propio, solo para superusuarios. | `mixins.py` (control de acceso), `views.py`, `forms.py`, `templates/panel/` |
+| **`panel`** | Panel de administración propio, solo para superusuarios. También da o quita el rol **docente**. | `mixins.py` (control de acceso), `views.py`, `forms.py`, `templates/panel/` |
+| **`vivo`** | **Reto en vivo**: salas, QR firmado, WebSockets, puntaje y ranking calculados en el servidor. | `models.py`, `servicios.py` (lógica), `consumers.py` (WebSocket), `routing.py`, `views.py`, `static/js/reto-vivo.js` |
 
 ### 4.4 Plantillas y archivos estáticos
 
@@ -436,14 +448,16 @@ def comprar(self, parte):
 
 ### 4.10 Pruebas automáticas
 
-Hay pruebas en `core/`, `usuarios/` (`tests.py`, `test_avatar.py`), `tienda/` y `panel/`. Cubren, entre otras cosas:
+Hay pruebas en `core/`, `usuarios/` (`tests.py`, `test_avatar.py`), `tienda/`, `panel/` y `vivo/`. Cubren, entre otras cosas:
 
 - todas las páginas responden y marcan la sección activa;
 - registro, login, logout, `?next=` y cambio de nombre, con los mismos mensajes de error que ve el usuario;
 - `guardar_puntos` (límites, sesión y CSRF), nivel e insignias;
 - compras: saldo, no comprar dos veces, precio vigente y que dos pestañas con datos viejos no gasten dos veces;
 - permisos del panel y reglas de suspender, eliminar y crear cuentas;
-- el avatar por capas y que el catálogo apunte a PNG que existen.
+- el avatar por capas y que el catálogo apunte a PNG que existen;
+- el reto en vivo: QR vencido o alterado, doble respuesta, respuesta tardía, que la respuesta correcta no
+  viaje al cliente, reconexión, puntos a la cuenta y una partida completa por WebSocket con varios clientes.
 
 ---
 
@@ -453,9 +467,10 @@ La carpeta [`database/`](database/) reúne lo necesario para entender y restaura
 
 | Archivo | Contenido |
 |---|---|
-| `schema.sql` | Script SQL (PostgreSQL) con **todas las tablas**, tipos, llaves primarias y foráneas, restricciones e índices. |
+| `schema.sql` | Script SQL (PostgreSQL) con **todas las tablas** (incluidas las `vivo_*` del reto en vivo), tipos, llaves primarias y foráneas, restricciones e índices. |
 | `mision_oceano_dump.sql` | Copia de respaldo **con datos de ejemplo** (catálogo, 10 usuarios, 25 compras). Ver 3.5. |
 | `diagrama_er.png` | Diagrama entidad-relación completo (las 12 tablas) en alta resolución. |
+| [`docs/RETO_EN_VIVO.md`](docs/RETO_EN_VIVO.md) | **DER actualizado** con las tablas del reto en vivo y **diagrama de secuencia** de una pregunta (Mermaid; GitHub los dibuja). |
 | `diagrama_er_negocio.png` | Diagrama enfocado en las 3 tablas propias (`Usuario`, `ParteAvatar`, `ParteAdquirida`). |
 
 Para crear la base **solo con la estructura** (sin datos): `psql -d mision_oceano -f database/schema.sql`.
