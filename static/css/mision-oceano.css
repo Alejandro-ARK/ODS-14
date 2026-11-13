@@ -743,3 +743,7 @@ button.mo-reto-opcion:disabled { opacity: .45; }
 .mo-reto-ranking li .pts { float: none; }
 .mo-reto-ranking li.text-muted { display: list-item; }
 .mo-reto-escalon .mo-avatar-pixel { display: block; margin: .25rem auto .35rem; }
+@media (max-width: 575px) {
+  .mo-reto-escalon { width: 33%; padding: .6rem .35rem; }
+  .mo-reto-escalon .nombre { font-size: .85rem; word-break: normal; overflow-wrap: break-word; hyphens: auto; }
+}

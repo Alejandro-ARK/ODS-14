@@ -176,10 +176,10 @@ sequenceDiagram
         D->>WS: {"tipo":"cerrar"}
         WS->>DB: cerrar_y_rankear(pin)
     end
-    DB-->>WS: correcta, aciertos, top 5 (solo la 1.ª llamada; las demás → None)
+    DB-->>WS: correcta, aciertos, top 5 (solo la 1.ª llamada, las demás → None)
     WS->>R: group_send(resultados)
-    R-->>D: respuesta correcta + top 5
-    R-->>E: respuesta correcta + top 5 + su resultado (+puntos, puesto)
+    R-->>D: respuesta correcta + top 5 con avatares
+    R-->>E: respuesta correcta + top 5 con avatares + su resultado (+puntos, puesto)
 ```
 
 **Reconexión:** si un celular pierde la señal, `ws.onclose` reintenta (1 s, 2 s, 4 s… máx. 10 s).
