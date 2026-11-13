@@ -3,6 +3,18 @@
 Implementación del requerimiento avanzado **«Reto multijugador en vivo con QR dinámico»**
 (documento técnico de Octubre de 2026). Todo el código está en la app **`vivo/`**.
 
+## 0. Avance según el cronograma (sección 8 del documento)
+
+| Semana | Actividad | Estado |
+|---|---|---|
+| 1 | Modelos, rol docente, Channels + Redis desplegados | ✅ `vivo/models.py`, grupo «Docentes» (migración `0002` + botón en el panel), `config/asgi.py`, Daphne + Render Key Value |
+| 2 | Crear sala, QR dinámico, unirse y sala de espera en vivo | ✅ RF-02, RF-03, RF-04 |
+| 3 | Preguntas sincronizadas, validación, puntaje y ranking | ✅ RF-05, RF-06, RF-07 (ranking y podio con avatares) |
+| 4 | Reconexión, puntos a la cuenta, pruebas, informe y video | ✅ RF-08, RF-09, 31 pruebas del reto + prueba de carga · ⏳ **informe y video** (los preparan los integrantes) |
+
+**Entregables:** código en GitHub ✅ · aplicación desplegada ✅ · DER actualizado ✅ (sección 3) ·
+diagrama de secuencia ✅ (sección 4) · video de 3 a 5 min con al menos 5 celulares ⏳.
+
 ## 1. Requerimientos y dónde se cumplen
 
 | ID | Requerimiento | Implementación | Prueba (`vivo/tests.py`) |
@@ -13,7 +25,7 @@ Implementación del requerimiento avanzado **«Reto multijugador en vivo con QR 
 | RF-04 | Unirse | Sin sesión → login/registro con `?next=` que conserva el token → `Participante` → sala de espera. El docente recibe el evento `lobby` con la lista. | `test_sin_sesion_pide_login_y_conserva_el_token`, `test_registro_vuelve_al_qr` |
 | RF-05 | Pregunta sincronizada | «Siguiente» → `abrir_siguiente_pregunta()` guarda `iniciada_en` y difunde la pregunta **sin** el campo `correcta`; las opciones se guardan y se envían en orden aleatorio para que el id no delate la respuesta. | `test_la_pregunta_no_lleva_la_respuesta` |
 | RF-06 | Puntaje en el servidor | `registrar_respuesta()`: transacción con `select_for_update`, tiempo medido en el servidor, `Puntos = 1000 × (1 − 0,5 × t/T)`; rechaza tardías y repetidas (`UniqueConstraint una_respuesta`). | `test_formula_de_puntaje`, `test_responder_dos_veces_se_rechaza`, `test_respuesta_tardia_se_rechaza` |
-| RF-07 | Ranking en vivo | `cerrar_y_rankear()` (idempotente): respuesta correcta, aciertos y top 5; cada estudiante recibe además su propio resultado. Al final, `podio`. | `test_resultados_y_ranking` |
+| RF-07 | Ranking en vivo | `cerrar_y_rankear()` (idempotente): respuesta correcta, aciertos y top 5 **con el avatar personalizado de cada jugador**; cada estudiante recibe además su propio resultado. Al final, `podio` (también con avatares). | `test_resultados_y_ranking` |
 | RF-08 | Reconexión | Al conectar, el consumidor envía `estado_actual()`: pregunta abierta con **tiempo restante**, si ya respondió y su puntaje. El cliente reintenta con espera exponencial (1, 2, 4… 10 s). | `test_reconexion_recupera_pregunta_tiempo_y_puntaje`, `test_flujo_en_vivo` |
 | RF-09 | Puntos a la cuenta | `_finalizar()`: puntaje escalado a máximo 100 sobre las preguntas jugadas → `Usuario.sumar_puntos()` (nivel e insignias). Solo ocurre una vez. | `test_partida_completa_suma_puntos_a_la_cuenta_una_vez` |
 
@@ -30,7 +42,8 @@ vivo/                         ← app nueva
 ├── migrations/0001_inicial.py, 0002_banco_y_docentes.py   (23 preguntas + grupo «Docentes»)
 ├── templates/vivo/           inicio, docente (proyector), estudiante (celular), qr_vencido
 └── tests.py                  31 pruebas
-static/js/reto-vivo.js        cliente: WebSocket nativo, reconexión, temporizador
+static/js/reto-vivo.js        cliente: WebSocket nativo, reconexión, temporizador, avatares en ranking y podio
+static/img/boton-pez.png      botón del menú en celulares (reemplaza el ícono de tres rayas, que no se veía)
 static/css/mision-oceano.css  estilos .mo-reto-*
 config/asgi.py                ProtocolTypeRouter + AuthMiddlewareStack + AllowedHostsOriginValidator
 config/settings.py            daphne, channels, vivo, CHANNEL_LAYERS (REDIS_URL)

@@ -236,6 +236,9 @@ class PartidaTests(TestCase):
         self.assertEqual(r['correcta']['id'], opcion(pid, True).id)
         self.assertEqual((r['aciertos'], r['respondidas'], r['jugadores']), (1, 2, 2))
         self.assertEqual(r['top'][0]['nombre'], 'Ana')
+        # Cada jugador del ranking lleva su avatar personalizado (las capas PNG que tiene puestas).
+        self.assertEqual(r['top'][0]['avatar'], self.a.capas_avatar())
+        self.assertTrue(r['top'][0]['avatar'])
         self.assertIsNone(servicios.cerrar_y_rankear(self.pin))   # idempotente
         yo = servicios.mi_situacion(self.pin, self.b)
         self.assertEqual(yo['ultima'], {'correcta': False, 'puntos': 0})

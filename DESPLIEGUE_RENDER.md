@@ -24,7 +24,7 @@ python -m venv venv
 venv\Scripts\activate                 # Windows   (Linux/Mac: source venv/bin/activate)
 pip install -r requirements.txt
 python manage.py migrate               # crea las tablas vivo_* y carga 23 preguntas + grupo «Docentes»
-python manage.py test                  # deben pasar todas (141)
+python manage.py test                  # deben pasar todas (142)
 python manage.py runserver             # con daphne instalado, runserver ya sirve WebSockets
 ```
 

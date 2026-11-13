@@ -91,8 +91,9 @@ def _datos_pregunta(sala, pregunta):
 
 
 def _ranking(sala, limite=TOP):
+    """Top de la sala con el avatar personalizado de cada jugador (URLs de sus capas PNG)."""
     return [
-        {'nombre': p.usuario.nombre, 'puntaje': p.puntaje}
+        {'nombre': p.usuario.nombre, 'puntaje': p.puntaje, 'avatar': p.usuario.capas_avatar()}
         for p in sala.participantes.select_related('usuario').order_by('-puntaje', 'unido_en')[:limite]
     ]
 

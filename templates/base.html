@@ -26,8 +26,9 @@
       <a class="navbar-brand" href="{% url 'core:inicio' %}">
         <span class="mo-logo-icono">🌊</span> Misión <span class="mo-logo-acento">Océano</span>
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mo-menu" aria-label="Abrir menú">
-        <span class="navbar-toggler-icon"></span>
+      <button class="navbar-toggler mo-toggler-pez" type="button" data-toggle="collapse" data-target="#mo-menu"
+              aria-controls="mo-menu" aria-expanded="false" aria-label="Abrir menú">
+        <img src="{% static 'img/boton-pez.png' %}" alt="" width="36" height="24">
       </button>
 
       <div class="collapse navbar-collapse" id="mo-menu">

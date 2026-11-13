@@ -24,6 +24,13 @@ class PaginasTests(TestCase):
         self.assertContains(r, f'class="nav-link activa" href="{reverse("core:mares")}"')
         self.assertNotContains(r, f'class="nav-link activa" href="{reverse("core:juega")}"')
 
+    def test_boton_de_menu_es_el_pez(self):
+        r = self.client.get(reverse('core:inicio'))
+        self.assertContains(r, 'class="navbar-toggler mo-toggler-pez"')
+        self.assertContains(r, 'data-target="#mo-menu"')
+        self.assertContains(r, 'img/boton-pez.png')
+        self.assertNotContains(r, 'navbar-toggler-icon')
+
     def test_visitante_ve_login_y_registro(self):
         r = self.client.get(reverse('core:inicio'))
         self.assertContains(r, reverse('usuarios:login'))

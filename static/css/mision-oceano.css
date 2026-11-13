@@ -728,3 +728,18 @@ button.mo-reto-opcion:disabled { opacity: .45; }
   .mo-nav-links .nav-link { padding: .45rem .7rem !important; margin: 0 .05rem; white-space: nowrap; }
   .mo-chip-puntos { white-space: nowrap; }
 }
+
+/* Botón del menú en celulares: el pez (Boton_Pez.png) reemplaza al ícono de tres rayas.
+   Mide 1.5em de alto, igual que el ícono original de Bootstrap, así la barra no cambia de tamaño. */
+.mo-toggler-pez { border: 0; padding: .25rem .5rem; line-height: 1; }
+.mo-toggler-pez img { display: block; height: 1.5em; width: auto; image-rendering: pixelated; transition: transform .25s; }
+.mo-toggler-pez:hover img, .mo-toggler-pez:focus img { transform: translateX(3px); }
+.mo-toggler-pez[aria-expanded="true"] img { transform: scaleX(-1); }   /* el pez se voltea al abrir el menú */
+.mo-toggler-pez:focus { outline: 2px solid var(--mo-turquesa); outline-offset: 2px; }
+
+/* Avatares en el ranking y el podio del reto en vivo */
+.mo-reto-ranking li { display: flex; align-items: center; gap: .6rem; }
+.mo-reto-ranking li .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mo-reto-ranking li .pts { float: none; }
+.mo-reto-ranking li.text-muted { display: list-item; }
+.mo-reto-escalon .mo-avatar-pixel { display: block; margin: .25rem auto .35rem; }

@@ -118,11 +118,24 @@
     texto('[data-mi-posicion]', yo.posicion);
   }
 
+  // Avatar del jugador: las mismas capas PNG apiladas que usa {% avatar %} en Django.
+  function crearAvatar(capas, tamano, modo) {
+    var cont = crear('span', 'mo-avatar-pixel mo-avatar-' + (modo || 'busto'));
+    cont.style.setProperty('--tam', tamano + 'px');
+    (capas || []).forEach(function (url) {
+      var img = document.createElement('img');
+      img.src = url; img.alt = ''; img.draggable = false;
+      cont.appendChild(img);
+    });
+    return cont;
+  }
+
   function pintarRanking(lista, top, avisarSiVacio) {
     vaciar(lista);
     lista.hidden = !top.length && !avisarSiVacio;
     top.forEach(function (j) {
       var li = crear('li');
+      li.appendChild(crearAvatar(j.avatar, 36));
       li.appendChild(crear('span', 'nombre', j.nombre));
       li.appendChild(crear('span', 'pts', j.puntaje + ' pts'));
       lista.appendChild(li);
@@ -210,6 +223,7 @@
     p.top.slice(0, 3).forEach(function (j, i) {
       var col = crear('div', 'mo-reto-escalon mo-reto-escalon-' + (i + 1));
       col.appendChild(crear('div', 'medalla', medallas[i]));
+      col.appendChild(crearAvatar(j.avatar, i === 0 ? 96 : 72));
       col.appendChild(crear('div', 'nombre', j.nombre));
       col.appendChild(crear('div', 'pts', j.puntaje + ' pts'));
       podio.appendChild(col);
